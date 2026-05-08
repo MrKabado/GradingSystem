@@ -2,7 +2,7 @@
 
 @section('content')
 
-<section class="text-center pt-28 pb-20 px-6">
+<section class="gs-primary-bg text-center pt-28 pb-20 px-6 h-screen">
 
     <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
         bg-[#1c2235] border border-[#252d40]
@@ -12,7 +12,7 @@
         School Management Platform
     </div>
 
-    <h1 class="font-bold text-6xl leading-tight max-w-4xl mx-auto mb-6">
+    <h1 class="text-white font-bold text-6xl leading-tight max-w-4xl mx-auto mb-6">
         Manage Grades.<br>
         <span class="text-[#4f6ef7]">Stay in Sync.</span>
     </h1>
@@ -23,11 +23,11 @@
     </p>
 
     <div class="flex justify-center gap-4">
-        <a href="{{ route('login') }}" class="gs-btn-primary">
+        <a href="{{ route('login') }}" class="gs-primary-btn">
             Get Started
         </a>
 
-        <a href="{{ route('login') }}" class="gs-btn-secondary">
+        <a href="{{ route('login') }}" class="gs-secondary-btn">
             Log in
         </a>
     </div>

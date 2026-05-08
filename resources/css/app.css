@@ -19,7 +19,7 @@
 }
 
 .gs-card {
-  @apply bg-[#13162A] border border-[#545878] rounded-lg
+  @apply bg-[#13162A] border border-[#545878]
 }
 
 .gs-secondary-text {
@@ -27,7 +27,7 @@
 }
 
 .gs-sidebar-hover-active {
-  @apply hover:text-[#8B84FF] bg-[#2C2D5D] border border-[#8B84FF] rounded-lg
+  @apply hover:text-[#8B84FF] hover:bg-[#2C2D5D] border border-transparent hover:border hover:border-[#8B84FF] rounded-lg
 }
 
 .gs-success-text {
@@ -44,5 +44,16 @@
 
 .gs-failed-bg {
   @apply bg-[#3B2437]
+}
+
+.gs-primary-btn {
+  @apply bg-[#6366F1] text-white px-6 py-3 rounded-lg font-semibold
+}
+
+.gs-secondary-btn {
+    @apply px-6 py-3 rounded-xl
+    border border-[#252d40]
+    bg-[#1c2235]
+    text-white font-semibold;
 }
 

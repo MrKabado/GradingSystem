@@ -1,10 +1,10 @@
-@extends('layouts.index')
+@extends('layouts.auth')
 
 @section('content')
-    <div class="relative bg-[#0D0F1A] h-screen flex items-center justify-center">
+    <div class="relative gs-primary-bg h-screen flex items-center justify-center">
         <div
-            class="bg-[#13162A] text-white min-w-sm flex flex-col justify-center items-center gap-5 py-5 px-6
-  shadow-[0_2px_100px_5px_rgba(0,0,0,0.25)] rounded-2xl border border-[#545878]">
+            class="gs-card rounded-2xl text-white min-w-sm flex flex-col justify-center items-center gap-5 py-5 px-6
+  shadow-[0_2px_100px_5px_rgba(0,0,0,0.25)]">
             <div class="text-center flex flex-col items-center justify-center">
                 <div class="bg-[#6366F1] rounded-md w-fit px-3 py-2">
                     <h1 class="text-lg font-bold">GS</h1>
@@ -30,7 +30,7 @@
 
                 <div>
                     <h1 class="text-xl font-semibold">Sign in</h1>
-                    <p class="text-[#6B7280] text-sm">Access the admin dashboard</p>
+                    <p class="gs-secondary-text text-sm">Access the admin dashboard</p>
                 </div>
 
                 <div class="flex flex-col text-[#6B7280] gap-1">
@@ -54,13 +54,9 @@
                         focus:ring-[#545878]">
                 </div>
 
-                <button type="submit" class="bg-[#6366F1] py-2 rounded-2xl mt-2">
+                <button type="submit" class="bg-[#6366F1] py-2 rounded-2xl mt-2 mb-2">
                     Login
                 </button>
-
-                <p class="text-center text-sm text-[#6B7280]">Forgot Passowrd?
-                    <a class="text-[#6366F1]">Reset</a>
-                </p>
             </form>
         </div>
     </div>

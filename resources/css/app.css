@@ -9,3 +9,40 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+.gs-primary-bg {
+  @apply bg-[#0D0F1A]
+}
+
+.gs-secondary-bg {
+  @apply bg-[#13162A]
+}
+
+.gs-card {
+  @apply bg-[#13162A] border border-[#545878] rounded-lg
+}
+
+.gs-secondary-text {
+  @apply text-[#545878]
+}
+
+.gs-sidebar-hover-active {
+  @apply hover:text-[#8B84FF] bg-[#2C2D5D] border border-[#8B84FF] rounded-lg
+}
+
+.gs-success-text {
+  @apply text-[#22C55E]
+}
+
+.gs-success-bg {
+  @apply bg-[#152B30]
+}
+
+.gs-failed-text {
+  @apply text-[#EF4444]
+}
+
+.gs-failed-bg {
+  @apply bg-[#3B2437]
+}
+

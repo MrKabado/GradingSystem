@@ -1,20 +1,20 @@
 <html>
 
 <head>
-    <title>GradeSync</title>
+  <title>GradeSync</title>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <script>
-    lucide.createIcons();
+  lucide.createIcons();
 </script>
 
 <body>
-    <main>
-        @yield('content')
-    </main>
+  <main>
+    @yield('content')
+  </main>
 </body>
 
 </html>

@@ -1,26 +1,27 @@
 <html>
 
 <head>
-    <title>GradeSync</title>
+  <title>GradeSync</title>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="flex min-h-screen bg-gray-400">
 
-    {{-- Sidebar --}}
-    @include('layouts.sidebar')
+  {{-- Sidebar --}}
+  @include('layouts.sidebar')
 
-    {{-- Main Content --}}
-    <main class="flex-1 p-6">
-        @yield('content')
-    </main>
+  {{-- Main Content --}}
+  <main class="flex-1 ml-64 pt-15">
+    @include('layouts.header')
+    @yield('content')
+  </main>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-    <script>
-        lucide.createIcons();
-    </script>
+  <script>
+    lucide.createIcons();
+  </script>
 
 </body>
 

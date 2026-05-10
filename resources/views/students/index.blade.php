@@ -89,25 +89,31 @@
                 Grade 7
               </td>
 
-              <td class="px-4 py-3 gs-secondary-text">
-                SECTION A
+              <td class="px-4 py-3">
+                <span class="border-[0.5px] border-[#31326E] bg-[#23264A] text-[#8B84FF] w-fit px-2 py-1 rounded-lg">
+                  Section A
+                </span>
               </td>
 
-              <td class="px-4 py-3">
-                <span class="px-2 py-1 text-xs rounded-full bg-green-500/20 text-green-400">
-                  Active
+              <td class="px-4 py-3 flex items-center gap-1">
+                <span class="flex items-center w-fit mt-1 px-1 py-1 text-xs border-2 border-[#152B30]  rounded-full bg-green-400">  
                 </span>
+
+                <p class="gs-secondary-text">Active</p>
               </td>
 
               <td class="px-4 py-3 text-center space-x-2">
 
-                <button class="text-indigo-400 hover:text-indigo-300 transition">
+                <div class="flex items-center gap-2">
+                  <button class="flex items-center gap-1 gs-secondary-text bg-[#22273D] px-2 py-1 rounded-lg border gs-primary-border-color">
+                  <i data-lucide="square-pen" class="w-4 h-4"></i>
                   Edit
                 </button>
 
-                <button class="text-red-400 hover:text-red-300 transition">
-                  Delete
+                <button class="h-full gs-secondary-text bg-[#22273D] px-2 py-1 rounded-lg border gs-primary-border-color">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
+                </div>
 
               </td>
 

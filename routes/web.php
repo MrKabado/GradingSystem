@@ -17,4 +17,16 @@ Route::prefix('auth')->group(function () {
 
   Route::get('/dashboard', function () {
     return view('dashboard.index');
-  })->middleware('auth');
+  })->middleware('auth')->name('dashboard');
+
+  Route::get('/students', function () {
+    return view('students.index');
+  })->middleware('auth')->name('students.index');
+
+  Route::get('/subjects', function () {
+    return view('subjects.index');
+  })->middleware('auth')->name('subjects.index');
+
+  Route::get('/grades', function () {
+    return view('grades.index');
+  })->middleware('auth')->name('grades.index');

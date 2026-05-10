@@ -16,24 +16,36 @@
         <h1 class="text-xs gs-secondary-text mb-2 ml-4">MAIN</h1>
         <div>
           <ul>
-            <li class="gs-secondary-text gs-sidebar-hover-active py-2 px-3 text-lg mb-1 flex gap-2 items-center">
-              <i data-lucide="box" class="w-8 h-6"></i>
+            <li>
+              <a href="{{ route('dashboard') }}"
+                class="w-full gs-secondary-text gs-sidebar-hover-active py-2 px-3 text-lg mb-1 flex gap-2 items-center">
+                <i data-lucide="box" class="w-8 h-6"></i>
                 Overview
+              </a>
             </li>
 
-            <li class="gs-secondary-text gs-sidebar-hover-active py-2 px-3 text-lg mb-1 flex gap-2 items-center">
-              <i data-lucide="circle-user-round" class="w-8 h-6"></i>
-              Students
+            <li>
+              <a href="{{ route('students.index') }}"
+                class="w-full gs-secondary-text gs-sidebar-hover-active py-2 px-3 text-lg mb-1 flex gap-2 items-center">
+                <i data-lucide="circle-user-round" class="w-8 h-6"></i>
+                Students
+              </a>
             </li>
 
-            <li class="gs-secondary-text gs-sidebar-hover-active py-2 px-3 text-lg mb-1 flex gap-2 items-center">
-              <i data-lucide="book-copy" class="w-8 h-6"></i>
-              Subjects
+            <li>
+              <a href="{{ route('subjects.index') }}"
+                class="w-full gs-secondary-text gs-sidebar-hover-active py-2 px-3 text-lg mb-1 flex gap-2 items-center">
+                <i data-lucide="book-copy" class="w-8 h-6"></i>
+                Subjects
+              </a>
             </li>
 
-            <li class="gs-secondary-text gs-sidebar-hover-active py-2 px-3 text-lg mb-1 flex gap-2 items-center">
-              <i data-lucide="chart-no-axes-column" class="w-8 h-6"></i>
-              Grades
+            <li>
+              <a href="{{ route('grades.index') }}"
+                class="w-full gs-secondary-text gs-sidebar-hover-active py-2 px-3 text-lg mb-1 flex gap-2 items-center">
+                <i data-lucide="chart-no-axes-column" class="w-8 h-6"></i>
+                Grades
+              </a>
             </li>
           </ul>
         </div>

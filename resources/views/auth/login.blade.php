@@ -25,6 +25,7 @@
         </div>
       @endif
 
+      {{-- THE ACTION IS WEB ROUTE --}}
       <form method="POST" action="/auth/login" class="w-full flex flex-col gap-3 mt-2">
         @csrf
 

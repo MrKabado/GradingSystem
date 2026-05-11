@@ -52,13 +52,10 @@
 
       <!-- Table -->
       <div class="overflow-x-auto border-[#545878]">
-
         <table class="min-w-full text-sm text-left">
-
           <!-- Header -->
           <thead class="bg-[#1C2035] border-b border-t border-[#545878]">
             <tr class="gs-secondary-text text-xs uppercase tracking-wider">
-
               <th class="px-4 py-3">#</th>
               <th class="px-4 py-3">Student Name</th>
               <th class="px-4 py-3">Student ID</th>
@@ -66,63 +63,84 @@
               <th class="px-4 py-3">Section</th>
               <th class="px-4 py-3">Status</th>
               <th class="px-4 py-3 text-center">Actions</th>
-
             </tr>
           </thead>
+
+          @php
+            $items = [
+                [
+                    'name' => 'Jerson Jay Bonghanoy',
+                    'studentId' => '20230891',
+                    'gradeLevel' => 'Grade 7',
+                    'section' => 'Section A',
+                    'status' => 'Active',
+                ],
+                [
+                    'name' => 'John Gave Dela Cerna',
+                    'studentId' => '20230892',
+                    'gradeLevel' => 'Grade 7',
+                    'section' => 'Section A',
+                    'status' => 'Active',
+                ],
+                [
+                    'name' => 'Mark Maturan',
+                    'studentId' => '20230893',
+                    'gradeLevel' => 'Grade 7',
+                    'section' => 'Section A',
+                    'status' => 'Inactive',
+                ],
+            ];
+          @endphp
 
           <!-- Body -->
           <tbody class="divide-y divide-[#2E3350]">
 
-            <tr class="hover:bg-[#22273D] transition">
+            @foreach ($items as $index => $item)
+              <tr class="hover:bg-[#22273D] transition">
+                <td class="px-4 py-3 text-white">{{ $index }}</td>
+                <td class="px-4 py-3 text-white font-medium">
+                  {{ $item['name'] }}
+                </td>
+                <td class="px-4 py-3 gs-secondary-text">
+                  {{ $item['studentId'] }}
+                </td>
+                <td class="px-4 py-3 gs-secondary-text">
+                  {{ $item['gradeLevel'] }}
+                </td>
+                <td class="px-4 py-3">
+                  <span class="border-[0.5px] border-[#31326E] bg-[#23264A] text-[#8B84FF] w-fit px-2 py-1 rounded-lg">
+                    {{ $item['section'] }}
+                  </span>
+                </td>
+                <td class="px-4 py-3 gap-1">
+                  <div class="flex items-center gap-1">
+                    <span
+                      class="flex items-center w-fit px-1 py-1 text-xs border-2 rounded-full
+  {{ $item['status'] === 'Active' ? 'bg-green-400 border-[#152B30]' : 'bg-red-400 border-[#152B30]' }}">
+                    </span>
 
-              <td class="px-4 py-3 text-white">1</td>
-
-              <td class="px-4 py-3 text-white font-medium">
-                Jerson Jay Bonghanoy
-              </td>
-
-              <td class="px-4 py-3 gs-secondary-text">
-                20230891
-              </td>
-
-              <td class="px-4 py-3 gs-secondary-text">
-                Grade 7
-              </td>
-
-              <td class="px-4 py-3">
-                <span class="border-[0.5px] border-[#31326E] bg-[#23264A] text-[#8B84FF] w-fit px-2 py-1 rounded-lg">
-                  Section A
-                </span>
-              </td>
-
-              <td class="px-4 py-3 flex items-center gap-1">
-                <span class="flex items-center w-fit mt-1 px-1 py-1 text-xs border-2 border-[#152B30]  rounded-full bg-green-400">  
-                </span>
-
-                <p class="gs-secondary-text">Active</p>
-              </td>
-
-              <td class="px-4 py-3 text-center space-x-2">
-
-                <div class="flex items-center gap-2">
-                  <button class="flex items-center gap-1 gs-secondary-text bg-[#22273D] px-2 py-1 rounded-lg border gs-primary-border-color">
-                  <i data-lucide="square-pen" class="w-4 h-4"></i>
-                  Edit
-                </button>
-
-                <button class="h-full gs-secondary-text bg-[#22273D] px-2 py-1 rounded-lg border gs-primary-border-color">
-                  <i data-lucide="trash-2" class="w-4 h-4"></i>
-                </button>
-                </div>
-
-              </td>
-
-            </tr>
+                    <p class="gs-secondary-text">{{ $item['status'] }}</p>
+                  </div>
+                </td>
+                <td class="px-4 py-3 text-center space-x-2">
+                  <div class="flex items-center gap-2">
+                    <button
+                      class="flex items-center gap-1 gs-secondary-text bg-[#22273D] hover:bg-[#2B304A] px-2 py-1 rounded-lg border gs-primary-border-color cursor-pointer">
+                      <i data-lucide="square-pen" class="w-4 h-4"></i>
+                      Edit
+                    </button>
+                    <button
+                      class="flex items-center gap-1 h-full gs-secondary-text bg-[#22273D] hover:bg-[#2B304A] px-2 py-1 rounded-lg border gs-primary-border-color cursor-pointer">
+                      <i data-lucide="trash-2" class="w-4 h-4"></i>
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            @endforeach
 
           </tbody>
-
         </table>
-
       </div>
     </div>
   </div>

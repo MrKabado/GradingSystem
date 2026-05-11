@@ -55,9 +55,12 @@
         <h1 class="text-xs gs-secondary-text mb-3 ml-4">REPORTS</h1>
         <div>
           <ul>
-            <li class="gs-secondary-text gs-sidebar-hover-active py-2 px-3 text-lg mb-1 flex gap-2 items-center">
-              <i data-lucide="notepad-text" class="w-8 h-6"></i>
-              Grade Reports
+            <li>
+              <a href="{{ route('grade-reports.index') }}"
+                class="w-full gs-secondary-text gs-sidebar-hover-active py-2 px-3 text-lg mb-1 flex gap-2 items-center">
+                <i data-lucide="notepad-text" class="w-8 h-6"></i>
+                Grade Reports
+              </a>
             </li>
           </ul>
         </div>

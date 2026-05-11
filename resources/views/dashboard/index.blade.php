@@ -1,7 +1,7 @@
 @extends('layouts.index')
 
 @section('content')
-  <div class="gs-primary-bg h-full p-6 space-y-8">
+  <div class="gs-main-page">
     {{-- GREETINGS HOLDER --}}
     <div class="gs-card rounded-lg p-4">
       <div class="flex items-center gap-2 mb-3">

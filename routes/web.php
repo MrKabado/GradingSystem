@@ -30,3 +30,7 @@ Route::prefix('auth')->group(function () {
   Route::get('/grades', function () {
     return view('grades.index');
   })->middleware('auth')->name('grades.index');
+
+    Route::get('/grade-report', function () {
+    return view('grade-reports.index');
+  })->middleware('auth')->name('grade-reports.index');

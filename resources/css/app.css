@@ -10,6 +10,10 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+.gs-main-page {
+  @apply bg-[#0D0F1A] h-full p-6 space-y-8
+}
+
 .gs-primary-bg {
   @apply bg-[#0D0F1A]
 }
@@ -18,8 +22,16 @@
   @apply bg-[#13162A]
 }
 
+.gs-tertiary-bg {
+  @apply bg-[#22273D]
+}
+
 .gs-card {
   @apply bg-[#13162A] border border-[#545878]
+}
+
+.gs-primary-text {
+  @apply text-gray-300
 }
 
 .gs-secondary-text {
@@ -58,6 +70,13 @@
 }
 
 .gs-primary-border-color {
-  border-color: #545878;
+  @apply border-[#545878];
 }
 
+.gs-icon-blue {
+  @apply text-[#6C63FF]
+}
+
+.gs-blue-bg {
+  @apply bg-[#6C63FF]
+}

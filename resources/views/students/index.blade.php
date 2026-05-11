@@ -1,7 +1,7 @@
 @extends('layouts.index')
 
 @section('content')
-  <div class="gs-primary-bg h-full p-6 space-y-8">
+  <div class="gs-main-page">
     {{-- TITLE and ADD STUDENT BTN --}}
     <div class="flex justify-between items-center">
       <div>
@@ -9,7 +9,7 @@
         <p class="gs-secondary-text text-sm">Manage and monitor all enrolled students</p>
       </div>
 
-      <x-button class="text-sm">
+      <x-button class="text-sm py-2">
         Add Student
       </x-button>
     </div>

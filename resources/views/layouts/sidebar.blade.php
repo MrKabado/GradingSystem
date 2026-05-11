@@ -4,8 +4,8 @@
   <div>
     <div class="relative border-b-[0.5px] pb-8 border-[#545878]">
       <div class="flex items-center gap-3">
-        <div class="flex justify-center px-3 py-2 bg-[#6366F1] rounded-lg">
-          <i data-lucide="layers" class="text-white"></i>
+        <div class="flex justify-center px-2 py-1 bg-[#6366F1] rounded-lg">
+          <i data-lucide="layers" class="text-white w-5 h-5" stroke-width="2"></i>
         </div>
         <h1 class="text-white text-xl font-semibold">GRADESYNC</h1>
       </div>
@@ -86,7 +86,7 @@
 
   {{-- USER --}}
   <div class="flex gap-4 items-center border-t border-[#545878] pt-4">
-    <div class="bg-[#6366F1] text-white p-3 rounded-full font-semibold">
+    <div class="bg-[#6366F1] text-white p-2 rounded-full font-semibold">
       <h1>AD</h1>
     </div>
 

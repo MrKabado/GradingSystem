@@ -1,36 +1,37 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SectionController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\SubjectController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::prefix('auth')->group(function () {
-  Route::get('/login', function () {
-    return view('auth.login');
-  })->name('login');
+    Route::get('/login', function () {
+        return view('auth.login');
+    })->name('login');
 
-  Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login']);
 });
 
-  Route::get('/dashboard', function () {
-    return view('dashboard.index');
-  })->middleware('auth')->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard.index');
+    })->name('dashboard');
 
-  Route::get('/students', function () {
-    return view('students.index');
-  })->middleware('auth')->name('students.index');
+    Route::resource('students', StudentController::class);
+    Route::resource('sections', SectionController::class)->except(['show']);
+    Route::resource('subjects', SubjectController::class)->except(['show']);
 
-  Route::get('/subjects', function () {
-    return view('subjects.index');
-  })->middleware('auth')->name('subjects.index');
-
-  Route::get('/grades', function () {
-    return view('grades.index');
-  })->middleware('auth')->name('grades.index');
+    Route::get('/grades', function () {
+        return view('grades.index');
+    })->name('grades.index');
 
     Route::get('/grade-report', function () {
-    return view('grade-reports.index');
-  })->middleware('auth')->name('grade-reports.index');
+        return view('grade-reports.index');
+    })->name('grade-reports.index');
+});

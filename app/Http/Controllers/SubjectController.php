@@ -2,65 +2,107 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
+use App\Models\Section;
 use App\Models\Subject;
-use App\Http\Controllers\Controller;
+use App\Models\Teacher;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class SubjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        //
+        return view('subjects.index', $this->indexPayload());
+    }
+
+    public function create(): View
+    {
+        return view('subjects.index', array_merge($this->indexPayload(), [
+            'modalMode' => 'create',
+            'subjectFormModel' => new Subject,
+        ]));
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $this->validatedSubjectData($request);
+
+        $subject = Subject::create($validated);
+
+        ActivityLog::record('created', 'subjects', $subject->id, 'Created subject: '.$subject->name);
+
+        return redirect()
+            ->route('subjects.index')
+            ->with('status', 'Subject created successfully.');
+    }
+
+    public function edit(Subject $subject): View
+    {
+        return view('subjects.index', array_merge($this->indexPayload(), [
+            'modalMode' => 'edit',
+            'subjectFormModel' => $subject->load(['section', 'teacher']),
+        ]));
+    }
+
+    public function update(Request $request, Subject $subject): RedirectResponse
+    {
+        $validated = $this->validatedSubjectData($request);
+
+        $subject->update($validated);
+
+        ActivityLog::record('updated', 'subjects', $subject->id, 'Updated subject: '.$subject->name);
+
+        return redirect()
+            ->route('subjects.index')
+            ->with('status', 'Subject updated successfully.');
+    }
+
+    public function destroy(Subject $subject): RedirectResponse
+    {
+        $name = $subject->name;
+        $id = $subject->id;
+        $subject->delete();
+
+        ActivityLog::record('deleted', 'subjects', $id, 'Deleted subject: '.$name);
+
+        return redirect()
+            ->route('subjects.index')
+            ->with('status', 'Subject removed successfully.');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * @return array<string, mixed>
      */
-    public function create()
+    private function indexPayload(): array
     {
-        //
+        return [
+            'subjects' => Subject::with(['section', 'teacher'])
+                ->orderBy('name')
+                ->paginate(15)
+                ->withQueryString(),
+
+            'sections' => Section::orderBy('year_level')
+                ->orderBy('section')
+                ->get(),
+
+            'teachers' => Teacher::orderBy('name')->get(),
+
+            'modalMode' => null,
+            'subjectFormModel' => new Subject,
+        ];
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @return array{name: string, section_id: ?int, teacher_id: ?int}
      */
-    public function store(Request $request)
+    private function validatedSubjectData(Request $request): array
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Subject $subject)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Subject $subject)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Subject $subject)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Subject $subject)
-    {
-        //
+        return $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'section_id' => ['nullable', 'exists:sections,id'],
+            'teacher_id' => ['nullable', 'exists:teachers,id'],
+        ]);
     }
 }

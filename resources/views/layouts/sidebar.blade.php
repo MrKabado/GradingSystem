@@ -40,6 +40,16 @@
             </a>
           </li>
 
+          {{-- SECTIONS --}}
+          <li>
+            <a href="{{ route('sections.index') }}"
+              class="w-full py-2 px-3 text-lg mb-1 flex gap-2 items-center gs-sidebar-hover-active
+              {{ request()->routeIs('sections.*') ? 'gs-sidebar-active' : 'gs-secondary-text' }}">
+              <i data-lucide="users-round" class="w-8 h-6"></i>
+              Sections
+            </a>
+          </li>
+
           {{-- SUBJECTS --}}
           <li>
             <a href="{{ route('subjects.index') }}"

@@ -2,65 +2,99 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Section;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class SectionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        //
+        return view('sections.index', $this->indexPayload());
+    }
+
+    public function create(): View
+    {
+        return view('sections.index', array_merge($this->indexPayload(), [
+            'modalMode' => 'create',
+            'sectionFormModel' => new Section,
+        ]));
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $this->validatedSectionData($request);
+
+        $section = Section::create($validated);
+
+        ActivityLog::record('created', 'sections', $section->id, 'Created section: '.$section->display_name);
+
+        return redirect()
+            ->route('sections.index')
+            ->with('status', 'Section created successfully.');
+    }
+
+    public function edit(Section $section): View
+    {
+        return view('sections.index', array_merge($this->indexPayload(), [
+            'modalMode' => 'edit',
+            'sectionFormModel' => $section,
+        ]));
+    }
+
+    public function update(Request $request, Section $section): RedirectResponse
+    {
+        $validated = $this->validatedSectionData($request);
+
+        $section->update($validated);
+
+        ActivityLog::record('updated', 'sections', $section->id, 'Updated section: '.$section->display_name);
+
+        return redirect()
+            ->route('sections.index')
+            ->with('status', 'Section updated successfully.');
+    }
+
+    public function destroy(Section $section): RedirectResponse
+    {
+        $label = $section->display_name;
+        $id = $section->id;
+        $section->delete();
+
+        ActivityLog::record('deleted', 'sections', $id, 'Deleted section: '.$label);
+
+        return redirect()
+            ->route('sections.index')
+            ->with('status', 'Section removed successfully.');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * @return array<string, mixed>
      */
-    public function create()
+    private function indexPayload(): array
     {
-        //
+        return [
+            'sections' => Section::withCount('students')
+                ->orderBy('year_level')
+                ->orderBy('section')
+                ->paginate(15)
+                ->withQueryString(),
+
+            'modalMode' => null,
+            'sectionFormModel' => new Section,
+        ];
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @return array{year_level: string, section: string}
      */
-    public function store(Request $request)
+    private function validatedSectionData(Request $request): array
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Section $section)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Section $section)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Section $section)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Section $section)
-    {
-        //
+        return $request->validate([
+            'year_level' => ['required', 'string', 'max:255'],
+            'section' => ['required', 'string', 'max:255'],
+        ]);
     }
 }

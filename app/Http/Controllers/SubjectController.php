@@ -87,8 +87,6 @@ class SubjectController extends Controller
                 ->orderBy('section')
                 ->get(),
 
-            'teachers' => Teacher::orderBy('name')->get(),
-
             'modalMode' => null,
             'subjectFormModel' => new Subject,
         ];
@@ -99,10 +97,19 @@ class SubjectController extends Controller
      */
     private function validatedSubjectData(Request $request): array
     {
-        return $request->validate([
+        $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'section_id' => ['nullable', 'exists:sections,id'],
-            'teacher_id' => ['nullable', 'exists:teachers,id'],
+            'teacher' => ['nullable', 'string', 'max:255'],
         ]);
+
+        $teacherName = trim($validated['teacher'] ?? '');
+        unset($validated['teacher']);
+
+        $validated['teacher_id'] = $teacherName === ''
+            ? null
+            : Teacher::firstOrCreate(['name' => $teacherName])->id;
+
+        return $validated;
     }
 }

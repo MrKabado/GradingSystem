@@ -180,18 +180,11 @@
             </div>
 
             <div>
-              <label for="teacher_id" class="block text-xs font-medium text-gray-400 mb-1">Teacher (optional)</label>
-              <select id="teacher_id" name="teacher_id"
-                class="w-full rounded-lg border border-[#545878] bg-[#0D0F1A] px-3 py-2 text-sm text-white focus:border-[#6366F1] focus:outline-none focus:ring-1 focus:ring-[#6366F1]">
-                <option value="">— None —</option>
-                @foreach ($teachers as $teacher)
-                  <option value="{{ $teacher->id }}"
-                    @selected((string) old('teacher_id', $subjectFormModel->teacher_id) === (string) $teacher->id)>
-                    {{ $teacher->name }}
-                  </option>
-                @endforeach
-              </select>
-              @error('teacher_id')
+              <label for="teacher" class="block text-xs font-medium text-gray-400 mb-1">Teacher (optional)</label>
+              <input id="teacher" name="teacher" type="text"
+                value="{{ old('teacher', $subjectFormModel->teacher?->name) }}"
+                class="w-full rounded-lg border border-[#545878] bg-[#0D0F1A] px-3 py-2 text-sm text-white placeholder-[#545878] focus:border-[#6366F1] focus:outline-none focus:ring-1 focus:ring-[#6366F1]" />
+              @error('teacher')
                 <p class="mt-1 text-xs text-red-400">{{ $message }}</p>
               @enderror
             </div>

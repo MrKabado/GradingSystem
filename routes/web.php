@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GradeController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
@@ -27,9 +28,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('sections', SectionController::class)->except(['show']);
     Route::resource('subjects', SubjectController::class)->except(['show']);
 
-    Route::get('/grades', function () {
-        return view('grades.index');
-    })->name('grades.index');
+    Route::resource('grades', GradeController::class)->parameters([
+        'grades' => 'student',
+    ]);
 
     Route::get('/grade-report', function () {
         return view('grade-reports.index');

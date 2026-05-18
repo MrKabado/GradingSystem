@@ -1,7 +1,7 @@
 @extends('layouts.index')
 
 @section('content')
-  <div class="gs-main-page">
+  <div class="gs-main-page h-full">
     @if (session('status'))
       <div class="rounded-lg border border-[#31326E] bg-[#1E1F44] px-4 py-3 text-sm text-[#8B84FF]">
         {{ session('status') }}
@@ -24,18 +24,18 @@
       <x-search-filter />
 
       <x-dropdown selectName="GradeLevels" :options="[
-          '7' => 'Grade 7',
-          '8' => 'Grade 8',
-          '9' => 'Grade 9',
-          '10' => 'Grade 10',
-      ]" />
+      '7' => 'Grade 7',
+      '8' => 'Grade 8',
+      '9' => 'Grade 9',
+      '10' => 'Grade 10',
+    ]" />
 
       <x-dropdown selectName="Sections" :options="[
-          'A' => 'Section A',
-          'B' => 'Section B',
-          'C' => 'Section C',
-          'D' => 'Section D',
-      ]" />
+      'A' => 'Section A',
+      'B' => 'Section B',
+      'C' => 'Section C',
+      'D' => 'Section D',
+    ]" />
     </div>
 
     <div class="gs-card py-4 rounded-lg space-y-4">
@@ -71,8 +71,7 @@
                 </td>
                 <td class="px-4 py-3">
                   @if ($subject->section)
-                    <span
-                      class="border-[0.5px] border-[#31326E] bg-[#23264A] text-[#8B84FF] w-fit px-2 py-1 rounded-lg">
+                    <span class="border-[0.5px] border-[#31326E] bg-[#23264A] text-[#8B84FF] w-fit px-2 py-1 rounded-lg">
                       {{ $subject->section->display_name }}
                     </span>
                   @else
@@ -126,8 +125,8 @@
         $formAction = $isEdit ? route('subjects.update', $subjectFormModel) : route('subjects.store');
       @endphp
 
-      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" role="dialog"
-        aria-modal="true" aria-labelledby="subject-modal-title">
+      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" role="dialog" aria-modal="true"
+        aria-labelledby="subject-modal-title">
         <div
           class="gs-card w-full max-w-lg rounded-xl shadow-xl border border-[#545878] bg-[#13162A] max-h-[90vh] overflow-y-auto">
           <div class="flex items-start justify-between gap-4 border-b border-[#545878] px-5 py-4">
@@ -140,8 +139,7 @@
               </p>
             </div>
             <a href="{{ route('subjects.index') }}"
-              class="rounded-lg p-2 text-[#545878] hover:bg-[#22273D] hover:text-white transition"
-              aria-label="Close">
+              class="rounded-lg p-2 text-[#545878] hover:bg-[#22273D] hover:text-white transition" aria-label="Close">
               <i data-lucide="x" class="w-5 h-5"></i>
             </a>
           </div>
@@ -154,8 +152,7 @@
 
             <div>
               <label for="name" class="block text-xs font-medium text-gray-400 mb-1">Subject name</label>
-              <input id="name" name="name" type="text" required
-                value="{{ old('name', $subjectFormModel->name) }}"
+              <input id="name" name="name" type="text" required value="{{ old('name', $subjectFormModel->name) }}"
                 class="w-full rounded-lg border border-[#545878] bg-[#0D0F1A] px-3 py-2 text-sm text-white placeholder-[#545878] focus:border-[#6366F1] focus:outline-none focus:ring-1 focus:ring-[#6366F1]" />
               @error('name')
                 <p class="mt-1 text-xs text-red-400">{{ $message }}</p>
@@ -168,8 +165,7 @@
                 class="w-full rounded-lg border border-[#545878] bg-[#0D0F1A] px-3 py-2 text-sm text-white focus:border-[#6366F1] focus:outline-none focus:ring-1 focus:ring-[#6366F1]">
                 <option value="">— None —</option>
                 @foreach ($sections as $section)
-                  <option value="{{ $section->id }}"
-                    @selected((string) old('section_id', $subjectFormModel->section_id) === (string) $section->id)>
+                  <option value="{{ $section->id }}" @selected((string) old('section_id', $subjectFormModel->section_id) === (string) $section->id)>
                     {{ $section->display_name }}
                   </option>
                 @endforeach
@@ -181,8 +177,7 @@
 
             <div>
               <label for="teacher" class="block text-xs font-medium text-gray-400 mb-1">Teacher (optional)</label>
-              <input id="teacher" name="teacher" type="text"
-                value="{{ old('teacher', $subjectFormModel->teacher?->name) }}"
+              <input id="teacher" name="teacher" type="text" value="{{ old('teacher', $subjectFormModel->teacher?->name) }}"
                 class="w-full rounded-lg border border-[#545878] bg-[#0D0F1A] px-3 py-2 text-sm text-white placeholder-[#545878] focus:border-[#6366F1] focus:outline-none focus:ring-1 focus:ring-[#6366F1]" />
               @error('teacher')
                 <p class="mt-1 text-xs text-red-400">{{ $message }}</p>

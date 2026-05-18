@@ -6,6 +6,7 @@ use App\Models\ActivityLog;
 use App\Models\Grade;
 use App\Models\Student;
 use App\Models\Subject;
+use App\Models\Section;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -28,49 +29,111 @@ class GradeController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $validated = $this->validatedGradeData($request);
-        $this->syncQuarterGrades($validated);
+        $validated = $request->validate([
+            'student_id' => ['required', 'exists:students,id'],
+            'grades' => ['required', 'array'],
+            'grades.*' => ['array'],
+            'grades.*.Q1' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'grades.*.Q2' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'grades.*.Q3' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'grades.*.Q4' => ['nullable', 'numeric', 'min:0', 'max:100'],
+        ]);
 
+        $studentId = $validated['student_id'];
+        $gradesData = $validated['grades'];
+
+        foreach ($gradesData as $subjectId => $quarters) {
+            foreach (Grade::QUARTERS as $quarter) {
+                $score = $quarters[$quarter] ?? null;
+                $score = ($score === null || $score === '') ? null : (float) $score;
+
+                if ($score !== null) {
+                    Grade::updateOrCreate(
+                        [
+                            'student_id' => $studentId,
+                            'subject_id' => $subjectId,
+                            'quarter' => $quarter,
+                        ],
+                        [
+                            'grade' => $score,
+                            'is_final' => false,
+                        ]
+                    );
+                } else {
+                    Grade::where('student_id', $studentId)
+                        ->where('subject_id', $subjectId)
+                        ->where('quarter', $quarter)
+                        ->delete();
+                }
+            }
+        }
+
+        $student = Student::find($studentId);
         ActivityLog::record(
             'created',
             'grades',
-            $validated['student_id'],
-            'Recorded grades for student #' . $validated['student_id']
+            $student->id,
+            'Recorded grades for ' . $student->full_name
         );
 
+        $section = Section::find($student->section_id);
+
         return redirect()
-            ->route('grades.index', ['subject_id' => $validated['subject_id']])
+            ->route('grades.index', [
+                'year_level' => $section?->year_level,
+                'section' => $section?->section,
+            ])
             ->with('status', 'Grades saved successfully.');
     }
 
     public function show(Request $request, Student $student): View
     {
-        $subjectId = $this->resolveSubjectId($request);
-
-        return view('grades.index', array_merge($this->indexPayload($request), [
-            'modalMode' => 'view',
-            'gradeFormStudent' => $student->load('section'),
-            'gradeFormQuarters' => $this->quarterGradesFor($student->id, $subjectId),
-            'selectedSubjectId' => $subjectId,
-        ]));
+        return view('grades.index', $this->indexPayload($request));
     }
 
     public function edit(Request $request, Student $student): View
     {
-        $subjectId = $this->resolveSubjectId($request);
-
-        return view('grades.index', array_merge($this->indexPayload($request), [
-            'modalMode' => 'edit',
-            'gradeFormStudent' => $student->load('section'),
-            'gradeFormQuarters' => $this->quarterGradesFor($student->id, $subjectId),
-            'selectedSubjectId' => $subjectId,
-        ]));
+        return view('grades.index', $this->indexPayload($request));
     }
 
     public function update(Request $request, Student $student): RedirectResponse
     {
-        $validated = $this->validatedGradeData($request);
-        $this->syncQuarterGrades($validated);
+        $validated = $request->validate([
+            'grades' => ['required', 'array'],
+            'grades.*' => ['array'],
+            'grades.*.Q1' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'grades.*.Q2' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'grades.*.Q3' => ['nullable', 'numeric', 'min:0', 'max:100'],
+            'grades.*.Q4' => ['nullable', 'numeric', 'min:0', 'max:100'],
+        ]);
+
+        $gradesData = $validated['grades'];
+
+        foreach ($gradesData as $subjectId => $quarters) {
+            foreach (Grade::QUARTERS as $quarter) {
+                $score = $quarters[$quarter] ?? null;
+                $score = ($score === null || $score === '') ? null : (float) $score;
+
+                if ($score !== null) {
+                    Grade::updateOrCreate(
+                        [
+                            'student_id' => $student->id,
+                            'subject_id' => $subjectId,
+                            'quarter' => $quarter,
+                        ],
+                        [
+                            'grade' => $score,
+                            'is_final' => false,
+                        ]
+                    );
+                } else {
+                    Grade::where('student_id', $student->id)
+                        ->where('subject_id', $subjectId)
+                        ->where('quarter', $quarter)
+                        ->delete();
+                }
+            }
+        }
 
         ActivityLog::record(
             'updated',
@@ -79,29 +142,34 @@ class GradeController extends Controller
             'Updated grades for ' . $student->full_name
         );
 
+        $section = $student->section;
+
         return redirect()
-            ->route('grades.index', ['subject_id' => $validated['subject_id']])
+            ->route('grades.index', [
+                'year_level' => $section?->year_level,
+                'section' => $section?->section,
+            ])
             ->with('status', 'Grades updated successfully.');
     }
 
     public function destroy(Request $request, Student $student): RedirectResponse
     {
-        $validated = $request->validate([
-            'subject_id' => ['required', 'exists:subjects,id'],
-        ]);
-
-        $name = $student->full_name;
-        $subjectId = (int) $validated['subject_id'];
+        $subjects = Subject::where('section_id', $student->section_id)->pluck('id');
 
         Grade::query()
             ->where('student_id', $student->id)
-            ->where('subject_id', $subjectId)
+            ->whereIn('subject_id', $subjects)
             ->delete();
 
-        ActivityLog::record('deleted', 'grades', $student->id, 'Deleted grades for ' . $name);
+        ActivityLog::record('deleted', 'grades', $student->id, 'Deleted grades for ' . $student->full_name);
+
+        $section = $student->section;
 
         return redirect()
-            ->route('grades.index', ['subject_id' => $subjectId])
+            ->route('grades.index', [
+                'year_level' => $section?->year_level,
+                'section' => $section?->section,
+            ])
             ->with('status', 'Grades removed successfully.');
     }
 
@@ -110,199 +178,194 @@ class GradeController extends Controller
      */
     private function indexPayload(Request $request): array
     {
-        $subjects = Subject::orderBy('name')->get();
-        $selectedSubjectId = $this->resolveSubjectId($request, $subjects);
-        $gradeRows = $this->buildGradeRows($selectedSubjectId);
-        $stats = $this->buildStats($gradeRows);
-
-        return [
-            'subjects' => $subjects,
-            'selectedSubjectId' => $selectedSubjectId,
-            'gradeRows' => $gradeRows,
-            'stats' => $stats,
-            'students' => Student::orderBy('last_name')->orderBy('first_name')->get(),
-            'quarters' => Grade::QUARTERS,
-            'modalMode' => null,
-            'gradeFormStudent' => new Student,
-            'gradeFormQuarters' => array_fill_keys(Grade::QUARTERS, null),
-        ];
-    }
-
-    private function resolveSubjectId(Request $request, $subjects = null): ?int
-    {
-        $subjectId = $request->integer('subject_id') ?: null;
-
-        if ($subjectId) {
-            return $subjectId;
-        }
-
-        $subjects ??= Subject::orderBy('name')->get();
-
-        return $subjects->first()?->id;
-    }
-
-    /**
-     * @return array<int, array<string, mixed>>
-     */
-    private function buildGradeRows(?int $subjectId): array
-    {
-        if ($subjectId === null) {
-            return [];
-        }
-
-        $grades = Grade::query()
-            ->with('student.section')
-            ->where('subject_id', $subjectId)
-            ->orderBy('student_id')
-            ->get()
-            ->groupBy('student_id');
-
-        $rows = [];
-
-        foreach ($grades as $studentGrades) {
-            $firstGrade = $studentGrades->first();
-
-            if (!$firstGrade || !$firstGrade->student) {
-                continue;
-            }
-
-            $student = $firstGrade->student;
-
-            $quarterValues = [];
-
-            foreach (Grade::QUARTERS as $quarter) {
-                $record = $studentGrades->firstWhere('quarter', $quarter);
-
-                $quarterValues[$quarter] = $record?->grade !== null
-                    ? (float) $record->grade
-                    : null;
-            }
-
-            $filled = array_filter($quarterValues, fn($value) => $value !== null);
-
-            $average = $filled === []
-                ? null
-                : round(array_sum($filled) / count($filled), 1);
-
-            $remarks = $average === null
-                ? null
-                : ($average >= Grade::PASSING_SCORE ? 'Passed' : 'Failed');
-
-            $rows[] = [
-                'student_id' => $student->id,
-                'subject_id' => $subjectId,
-                'name' => $student->full_name,
-                'grades' => $quarterValues,
-                'average' => $average,
-                'remarks' => $remarks,
-            ];
-        }
-
-        usort($rows, fn($a, $b) => strcasecmp($a['name'], $b['name']));
-
-        return $rows;
-    }
-
-    /**
-     * @param  array<int, array<string, mixed>>  $gradeRows
-     * @return array{total: int, passed: int, failed: int, average: ?float}
-     */
-    private function buildStats(array $gradeRows): array
-    {
-        $withAverage = array_filter($gradeRows, fn($row) => $row['average'] !== null);
-        $passed = count(array_filter($withAverage, fn($row) => $row['remarks'] === 'Passed'));
-        $failed = count(array_filter($withAverage, fn($row) => $row['remarks'] === 'Failed'));
-
-        $averages = array_column($withAverage, 'average');
-        $classAverage = $averages === [] ? null : round(array_sum($averages) / count($averages), 1);
-
-        return [
-            'total' => count($gradeRows),
-            'passed' => $passed,
-            'failed' => $failed,
-            'average' => $classAverage,
-        ];
-    }
-
-    /**
-     * @return array<string, ?float>
-     */
-    private function quarterGradesFor(int $studentId, ?int $subjectId): array
-    {
-        $values = array_fill_keys(Grade::QUARTERS, null);
-
-        if ($subjectId === null) {
-            return $values;
-        }
-
-        $records = Grade::query()
-            ->where('student_id', $studentId)
-            ->where('subject_id', $subjectId)
+        $sections = Section::orderBy('year_level')
+            ->orderBy('section')
             ->get();
 
-        foreach (Grade::QUARTERS as $quarter) {
-            $record = $records->firstWhere('quarter', $quarter);
-            $values[$quarter] = $record?->grade !== null ? (float) $record->grade : null;
-        }
+        $yearLevels = $sections->pluck('year_level')->unique()->sort()->values();
+        $sectionNames = $sections->pluck('section')->unique()->sort()->values();
 
-        return $values;
-    }
+        $selectedYearLevel = $request->input('year_level', $yearLevels->first());
+        $selectedSectionName = $request->input('section', $sectionNames->first());
+        $search = $request->input('search');
 
-    /**
-     * @return array{student_id: int, subject_id: int, Q1: ?float, Q2: ?float, Q3: ?float, Q4: ?float}
-     */
-    private function validatedGradeData(Request $request): array
-    {
-        $validated = $request->validate([
-            'student_id' => ['required', 'exists:students,id'],
-            'subject_id' => ['required', 'exists:subjects,id'],
-            'Q1' => ['nullable', 'numeric', 'min:0', 'max:100'],
-            'Q2' => ['nullable', 'numeric', 'min:0', 'max:100'],
-            'Q3' => ['nullable', 'numeric', 'min:0', 'max:100'],
-            'Q4' => ['nullable', 'numeric', 'min:0', 'max:100'],
-        ]);
+        $activeSection = Section::where('year_level', $selectedYearLevel)
+            ->where('section', $selectedSectionName)
+            ->first();
 
-        foreach (Grade::QUARTERS as $quarter) {
-            $value = $validated[$quarter] ?? null;
-            $validated[$quarter] = $value === null || $value === '' ? null : (float) $value;
-        }
+        $gradeRows = [];
+        $stats = [
+            'total' => 0,
+            'passed' => 0,
+            'failed' => 0,
+            'average' => null,
+        ];
+        $students = collect();
+        $subjects = collect();
 
-        $hasQuarter = collect(Grade::QUARTERS)->contains(
-            fn(string $quarter) => $request->filled($quarter)
-        );
+        if ($activeSection) {
+            $subjects = Subject::where('section_id', $activeSection->id)
+                ->with('teacher')
+                ->orderBy('name')
+                ->get();
 
-        if (!$hasQuarter) {
-            throw ValidationException::withMessages([
-                'Q1' => 'Enter a score for at least one quarter. Other quarters are optional.',
-            ]);
-        }
-
-        return $validated;
-    }
-
-    /**
-     * @param  array{student_id: int, subject_id: int, Q1: ?float, Q2: ?float, Q3: ?float, Q4: ?float}  $validated
-     */
-    private function syncQuarterGrades(array $validated): void
-    {
-        foreach (Grade::QUARTERS as $quarter) {
-            $score = $validated[$quarter];
-
-            if ($score === null) {
-                continue;
+            $studentsQuery = Student::where('section_id', $activeSection->id);
+            if ($search) {
+                $studentsQuery->where(function($q) use ($search) {
+                    $q->where('first_name', 'like', "%{$search}%")
+                      ->orWhere('last_name', 'like', "%{$search}%")
+                      ->orWhere('student_id', 'like', "%{$search}%");
+                });
             }
+            $students = $studentsQuery->orderBy('last_name')->orderBy('first_name')->get();
 
-            Grade::query()->updateOrCreate(
-                [
-                    'student_id' => $validated['student_id'],
-                    'subject_id' => $validated['subject_id'],
-                    'quarter' => $quarter,
-                ],
-                [
-                    'grade' => $score,
-                    'is_final' => false,
-                ]
-            );
+            if ($subjects->isNotEmpty()) {
+                $studentIds = $students->pluck('id');
+                $sectionSubjectIds = $subjects->pluck('id');
+
+                $grades = Grade::whereIn('student_id', $studentIds)
+                    ->whereIn('subject_id', $sectionSubjectIds)
+                    ->get()
+                    ->groupBy('student_id');
+
+                foreach ($students as $student) {
+                    $studentGrades = $grades->get($student->id, collect());
+
+                    $quarterScores = [
+                        'Q1' => [],
+                        'Q2' => [],
+                        'Q3' => [],
+                        'Q4' => [],
+                    ];
+
+                    $subjectAverages = [];
+
+                    foreach ($subjects as $sub) {
+                        $subGrades = $studentGrades->where('subject_id', $sub->id);
+
+                        $subQuarterValues = [];
+                        foreach (Grade::QUARTERS as $quarter) {
+                            $record = $subGrades->firstWhere('quarter', $quarter);
+                            if ($record && $record->grade !== null) {
+                                $quarterScores[$quarter][] = (float)$record->grade;
+                                $subQuarterValues[] = (float)$record->grade;
+                            }
+                        }
+                        if ($subQuarterValues !== []) {
+                            $subjectAverages[] = array_sum($subQuarterValues) / count($subQuarterValues);
+                        }
+                    }
+
+                    $qAverages = [];
+                    foreach (Grade::QUARTERS as $quarter) {
+                        $scores = $quarterScores[$quarter];
+                        $qAverages[$quarter] = $scores === [] ? null : round(array_sum($scores) / count($scores), 0);
+                    }
+
+                    $gpa = $subjectAverages === [] ? null : round(array_sum($subjectAverages) / count($subjectAverages), 0);
+                    $remarks = $gpa === null ? null : ($gpa >= Grade::PASSING_SCORE ? 'Passed' : 'Failed');
+
+                    $gradeRows[] = [
+                        'student_id' => $student->id,
+                        'student_no' => $student->student_id,
+                        'name' => $student->full_name,
+                        'grades' => $qAverages,
+                        'average' => $gpa,
+                        'remarks' => $remarks,
+                    ];
+                }
+
+                $withAverage = array_filter($gradeRows, fn($row) => $row['average'] !== null);
+                $passedCount = count(array_filter($withAverage, fn($row) => $row['remarks'] === 'Passed'));
+                $failedCount = count(array_filter($withAverage, fn($row) => $row['remarks'] === 'Failed'));
+                $averages = array_column($withAverage, 'average');
+                $classAverage = $averages === [] ? null : round(array_sum($averages) / count($averages), 1);
+
+                $stats = [
+                    'total' => count($gradeRows),
+                    'passed' => $passedCount,
+                    'failed' => $failedCount,
+                    'average' => $classAverage,
+                ];
+            }
         }
+
+        $modalMode = $request->input('modal');
+        $gradeFormStudent = null;
+        $reportCardRows = [];
+        $gpa = null;
+        $gpaRemarks = null;
+
+        $modalMode = $modalMode ?: ($request->route() ? $request->route()->action['as'] : null);
+        if ($modalMode) {
+            if (str_contains($modalMode, 'show')) {
+                $modalMode = 'view';
+            } elseif (str_contains($modalMode, 'edit')) {
+                $modalMode = 'edit';
+            }
+        }
+
+        $studentParam = $request->route('student') ?: $request->input('student_id');
+        if (in_array($modalMode, ['view', 'edit']) && $studentParam) {
+            $gradeFormStudent = $studentParam instanceof Student
+                ? $studentParam->load('section')
+                : Student::with('section')->find($studentParam);
+            if ($gradeFormStudent) {
+                $sectionSubjects = Subject::where('section_id', $gradeFormStudent->section_id)
+                    ->with('teacher')
+                    ->orderBy('name')
+                    ->get();
+
+                $studentAllGrades = Grade::where('student_id', $gradeFormStudent->id)
+                    ->get()
+                    ->groupBy('subject_id');
+
+                $totalFinalGrades = [];
+                foreach ($sectionSubjects as $sub) {
+                    $subGrades = $studentAllGrades->get($sub->id, collect());
+                    $qGrades = [];
+                    foreach (Grade::QUARTERS as $quarter) {
+                        $rec = $subGrades->firstWhere('quarter', $quarter);
+                        $qGrades[$quarter] = $rec?->grade !== null ? (float) $rec->grade : null;
+                    }
+                    $filledQ = array_filter($qGrades, fn($v) => $v !== null);
+                    $subAvg = $filledQ === [] ? null : round(array_sum($filledQ) / count($filledQ), 1);
+                    if ($subAvg !== null) {
+                        $totalFinalGrades[] = $subAvg;
+                    }
+                    $reportCardRows[] = [
+                        'subject_id' => $sub->id,
+                        'subject' => $sub->name,
+                        'teacher' => $sub->teacher?->name ?? '—',
+                        'grades' => $qGrades,
+                        'average' => $subAvg,
+                        'remarks' => $subAvg === null ? '—' : ($subAvg >= Grade::PASSING_SCORE ? 'Passed' : 'Failed'),
+                    ];
+                }
+
+                $gpa = $totalFinalGrades === [] ? null : round(array_sum($totalFinalGrades) / count($totalFinalGrades), 1);
+                $gpaRemarks = $gpa === null ? null : ($gpa >= Grade::PASSING_SCORE ? 'Passed' : 'Failed');
+            }
+        }
+
+        return [
+            'sections' => $sections,
+            'yearLevels' => $yearLevels,
+            'sectionNames' => $sectionNames,
+            'selectedYearLevel' => $selectedYearLevel,
+            'selectedSection' => $selectedSectionName,
+            'activeSection' => $activeSection,
+            'subjects' => $subjects,
+            'gradeRows' => $gradeRows,
+            'stats' => $stats,
+            'quarters' => Grade::QUARTERS,
+            'students' => $students,
+            
+            'modalMode' => $modalMode,
+            'gradeFormStudent' => $gradeFormStudent,
+            'reportCardRows' => $reportCardRows,
+            'gpa' => $gpa,
+            'gpaRemarks' => $gpaRemarks,
+        ];
     }
 }

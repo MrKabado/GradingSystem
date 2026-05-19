@@ -3,8 +3,10 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GradeController;
+use App\Http\Controllers\GradeReportController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\StudentReportController;
 use App\Http\Controllers\SubjectController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,7 +33,7 @@ Route::middleware('auth')->group(function () {
         'grades' => 'student',
     ]);
 
-    Route::get('/grade-report', function () {
-        return view('grade-reports.index');
-    })->name('grade-reports.index');
+    Route::get('/grade-report', [GradeReportController::class, 'index'])->name('grade-reports.index');
+    Route::get('/grade-reports/{student}/pdf', [StudentReportController::class, 'pdfDownload'])->name('grade-reports.pdf');
+    Route::post('/grade-reports/{student}/approve', [StudentReportController::class, 'approve'])->name('grade-reports.approve');
 });

@@ -20,7 +20,7 @@
       </a>
     </div>
 
-    <div class="flex gap-4 justify-evenly">
+    <div class="flex gap-4 justify-between">
       <x-search-filter />
 
       <x-dropdown selectName="GradeLevels" :options="[

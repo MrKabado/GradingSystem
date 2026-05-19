@@ -5,7 +5,7 @@
     {{-- GREETINGS HOLDER --}}
     <div class="gs-card rounded-lg p-4">
       <div class="flex items-center gap-2 mb-3">
-        <h1 class="text-gray-300 text-3xl font-bold">Welcome back, Admin</h1>
+        <h1 class="text-gray-300 text-3xl font-bold">Welcome back, {{ auth()->user()->name ?? 'Admin' }}</h1>
         <i data-lucide="hand" class="text-gray-300 w-8 h-8"></i>
       </div>
 
@@ -21,21 +21,9 @@
         </div>
 
         <div class="w-fit flex flex-col gap-1">
-          <h1 class="text-gray-300 text-3xl font-semibold">248</h1>
+          <h1 class="text-gray-300 text-3xl font-semibold">{{ $totalStudents }}</h1>
           <p class="gs-secondary-text">Total Students</p>
-          <p class="gs-success-bg gs-success-text text-xs px-1 rounded-md">+12 this month</p>
-        </div>
-      </div>
-
-      <div class="gs-card rounded-lg p-4 w-full">
-        <div class="gs-success-bg w-fit p-2 rounded-md mb-2">
-          <i data-lucide="activity" class="gs-success-text w-6 h-6"></i>
-        </div>
-
-        <div class="w-fit flex flex-col gap-1">
-          <h1 class="text-gray-300 text-3xl font-semibold">94%</h1>
-          <p class="gs-secondary-text">Active Rate</p>
-          <p class="gs-success-bg gs-success-text text-xs px-1 rounded-md">+2% vs last term</p>
+          <p class="gs-success-bg gs-success-text text-xs px-1 rounded-md">+{{ $newStudentsThisMonth }} this month</p>
         </div>
       </div>
 
@@ -45,9 +33,9 @@
         </div>
 
         <div class="w-fit flex flex-col gap-1">
-          <h1 class="text-gray-300 text-3xl font-semibold">4</h1>
+          <h1 class="text-gray-300 text-3xl font-semibold">{{ $totalGradeLevels }}</h1>
           <p class="gs-secondary-text">Grade Levels</p>
-          <p class="gs-success-bg gs-success-text text-xs px-1 rounded-md">Grades 7 - 10</p>
+          <p class="gs-success-bg gs-success-text text-xs px-1 rounded-md">{{ $gradeLevelsRange }}</p>
         </div>
       </div>
 
@@ -57,9 +45,9 @@
         </div>
 
         <div class="w-fit flex flex-col gap-1">
-          <h1 class="text-gray-300 text-3xl font-semibold">4</h1>
+          <h1 class="text-gray-300 text-3xl font-semibold">{{ $totalSections }}</h1>
           <p class="gs-secondary-text">Sections</p>
-          <p class="gs-success-bg gs-success-text text-xs px-1 rounded-md">A, B, C, D</p>
+          <p class="gs-success-bg gs-success-text text-xs px-1 rounded-md">{{ $sectionNamesList }}</p>
         </div>
       </div>
     </div>
@@ -68,9 +56,17 @@
     <div>
       <h1 class="text-gray-300">Recent Activity</h1>
       <div class="gs-card rounded-lg p-4 mt-4 flex flex-col gap-2 gs-secondary-text text-sm">
-        <h1 class="border-b-[0.5px] border-[#545878] pb-2">Lebron James grade record updated</h1>
-        <h1 class="border-b-[0.5px] border-[#545878] pb-2">New student added: John Casagan</h1>
+        @forelse($recentActivities as $activity)
+          <div class="flex justify-between items-center border-b-[0.5px] border-[#545878] pb-2 last:border-b-0 last:pb-0">
+            <h1>{{ $activity->description }}</h1>
+            <span class="text-xs opacity-60">{{ $activity->created_at->diffForHumans() }}</span>
+          </div>
+        @empty
+          <div class="py-2 text-center">
+            <p class="text-sm opacity-60">No recent activity found.</p>
+          </div>
+        @endforelse
       </div>
     </div>
   </div>
-@endsection
+@endsection

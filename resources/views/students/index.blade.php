@@ -20,23 +20,15 @@
       </a>
     </div>
 
-    <div class="flex gap-4 justify-evenly">
-      <x-search-filter />
-
-      <x-dropdown selectName="GradeLevels" :options="[
-          '7' => 'Grade 7',
-          '8' => 'Grade 8',
-          '9' => 'Grade 9',
-          '10' => 'Grade 10',
-      ]" />
-
-      <x-dropdown selectName="Sections" :options="[
-          'A' => 'Section A',
-          'B' => 'Section B',
-          'C' => 'Section C',
-          'D' => 'Section D',
-      ]" />
-    </div>
+    <x-section-filters
+      :action="route('students.index')"
+      :reset-url="route('students.index')"
+      :year-levels="$yearLevels"
+      :section-names="$sectionNames"
+      :selected-year-level="$selectedYearLevel"
+      :selected-section="$selectedSection"
+      search-placeholder="Search by name or ID..."
+    />
 
     <div class="gs-card py-4 rounded-lg space-y-4">
       <div class="flex justify-between items-center px-4">
@@ -83,7 +75,7 @@
                   @if ($student->section)
                     <span
                       class="border-[0.5px] border-[#31326E] bg-[#23264A] text-[#8B84FF] w-fit px-2 py-1 rounded-lg">
-                      {{ $student->section->section }}
+                      Section {{ $student->section->section }}
                     </span>
                   @else
                     <span class="gs-secondary-text">—</span>

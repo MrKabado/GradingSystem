@@ -20,23 +20,15 @@
       </a>
     </div>
 
-    <div class="flex gap-4 justify-between">
-      <x-search-filter />
-
-      <x-dropdown selectName="GradeLevels" :options="[
-      '7' => 'Grade 7',
-      '8' => 'Grade 8',
-      '9' => 'Grade 9',
-      '10' => 'Grade 10',
-    ]" />
-
-      <x-dropdown selectName="Sections" :options="[
-      'A' => 'Section A',
-      'B' => 'Section B',
-      'C' => 'Section C',
-      'D' => 'Section D',
-    ]" />
-    </div>
+    <x-section-filters
+      :action="route('subjects.index')"
+      :reset-url="route('subjects.index')"
+      :year-levels="$yearLevels"
+      :section-names="$sectionNames"
+      :selected-year-level="$selectedYearLevel"
+      :selected-section="$selectedSection"
+      search-placeholder="Search by subject or teacher..."
+    />
 
     <div class="gs-card py-4 rounded-lg space-y-4">
       <div class="flex justify-between items-center px-4">

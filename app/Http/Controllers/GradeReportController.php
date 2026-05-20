@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Concerns\AppliesSectionFilters;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use App\Models\Section;
@@ -13,19 +13,19 @@ use Illuminate\View\View;
 
 class GradeReportController extends Controller
 {
+    use AppliesSectionFilters;
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request): View
     {
-        // 1. Fetch sections & filter options
-        $sectionsList = Section::orderBy('year_level')->orderBy('section')->get();
-        $yearLevels = $sectionsList->pluck('year_level')->unique()->sort()->values();
-        $sectionNames = $sectionsList->pluck('section')->unique()->sort()->values();
-
-        $selectedYearLevel = $request->input('year_level');
-        $selectedSection = $request->input('section');
-        $search = $request->input('search');
+        $filters = $this->sectionFilterParams($request);
+        $yearLevels = $filters['yearLevels'];
+        $sectionNames = $filters['sectionNames'];
+        $selectedYearLevel = $filters['selectedYearLevel'];
+        $selectedSection = $filters['selectedSection'];
+        $search = $filters['search'];
 
         // 2. Fetch and filter students
         $studentsQuery = Student::with(['section', 'grades']);

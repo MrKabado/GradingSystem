@@ -14,26 +14,15 @@
       </div>
     @endif
 
-    <form method="GET" action="{{ route('grade-reports.index') }}" class="flex gap-4 justify-between items-center bg-[#13162A] p-4 rounded-xl border border-[#545878]/30" id="grade-reports-filter-form">
-      <div class="flex items-center gap-3 bg-[#1C2035] border border-[#545878] px-4 py-1.5 rounded-lg hover:border-[#6366F1] focus-within:ring-1 focus-within:ring-[#6366F1] focus-within:border-[#6366F1] transition-all duration-200 w-full max-w-lg">
-        <i data-lucide="search" class="text-gray-400 w-4 h-4"></i>
-        <input
-          type="text"
-          name="search"
-          value="{{ $search }}"
-          placeholder="Search by student name or ID..."
-          class="w-full bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none">
-      </div>
-
-      <div class="flex gap-3">
-        <x-dropdown selectName="year_level" :options="array_merge(['' => 'All Grades'], $yearLevels->combine($yearLevels->map(fn($y) => 'Grade ' . $y))->toArray())" :selected="$selectedYearLevel" />
-        <x-dropdown selectName="section" :options="array_merge(['' => 'All Sections'], $sectionNames->combine($sectionNames->map(fn($s) => 'Section ' . $s))->toArray())" :selected="$selectedSection" />
-        
-        <a href="{{ route('grade-reports.index') }}" class="bg-[#22273D] border border-[#545878]/30 hover:bg-[#2B304A] text-gray-300 px-4 py-1.5 rounded-lg text-sm transition flex items-center justify-center">
-          Reset
-        </a>
-      </div>
-    </form>
+    <x-section-filters
+      :action="route('grade-reports.index')"
+      :reset-url="route('grade-reports.index')"
+      :year-levels="$yearLevels"
+      :section-names="$sectionNames"
+      :selected-year-level="$selectedYearLevel"
+      :selected-section="$selectedSection"
+      search-placeholder="Search by student name or ID..."
+    />
 
     <div class="grid grid-cols-3 gap-4">
       @foreach ($cards as $card)
@@ -305,15 +294,4 @@
 
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const filterForm = document.getElementById('grade-reports-filter-form');
-      if (filterForm) {
-        filterForm.querySelectorAll('select').forEach(select => {
-          select.addEventListener('change', () => filterForm.submit());
-        });
-      }
-    });
-  </script>
-
-@endsection
+@endsection

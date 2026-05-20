@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\AppliesSectionFilters;
 use App\Models\ActivityLog;
 use App\Models\Section;
 use Illuminate\Http\RedirectResponse;
@@ -10,14 +11,16 @@ use Illuminate\View\View;
 
 class SectionController extends Controller
 {
-    public function index(): View
+    use AppliesSectionFilters;
+
+    public function index(Request $request): View
     {
-        return view('sections.index', $this->indexPayload());
+        return view('sections.index', $this->indexPayload($request));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('sections.index', array_merge($this->indexPayload(), [
+        return view('sections.index', array_merge($this->indexPayload($request), [
             'modalMode' => 'create',
             'sectionFormModel' => new Section,
         ]));
@@ -36,9 +39,9 @@ class SectionController extends Controller
             ->with('status', 'Section created successfully.');
     }
 
-    public function edit(Section $section): View
+    public function edit(Request $request, Section $section): View
     {
-        return view('sections.index', array_merge($this->indexPayload(), [
+        return view('sections.index', array_merge($this->indexPayload($request), [
             'modalMode' => 'edit',
             'sectionFormModel' => $section,
         ]));
@@ -73,18 +76,38 @@ class SectionController extends Controller
     /**
      * @return array<string, mixed>
      */
-    private function indexPayload(): array
+    private function indexPayload(Request $request): array
     {
-        return [
-            'sections' => Section::withCount('students')
-                ->orderBy('year_level')
-                ->orderBy('section')
+        $filters = $this->sectionFilterParams($request);
+
+        $sectionsQuery = Section::withCount('students')
+            ->orderBy('year_level')
+            ->orderBy('section');
+
+        if ($filters['selectedYearLevel']) {
+            $sectionsQuery->where('year_level', $filters['selectedYearLevel']);
+        }
+
+        if ($filters['selectedSection']) {
+            $sectionsQuery->where('section', $filters['selectedSection']);
+        }
+
+        if ($filters['search']) {
+            $search = $filters['search'];
+            $sectionsQuery->where(function ($q) use ($search) {
+                $q->where('year_level', 'like', "%{$search}%")
+                    ->orWhere('section', 'like', "%{$search}%");
+            });
+        }
+
+        return array_merge($filters, [
+            'sections' => $sectionsQuery
                 ->paginate(15)
                 ->withQueryString(),
 
             'modalMode' => null,
             'sectionFormModel' => new Section,
-        ];
+        ]);
     }
 
     /**

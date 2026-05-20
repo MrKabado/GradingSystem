@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\AppliesSectionFilters;
 use App\Models\ActivityLog;
 use App\Models\Section;
 use App\Models\Subject;
@@ -12,14 +13,16 @@ use Illuminate\View\View;
 
 class SubjectController extends Controller
 {
-    public function index(): View
+    use AppliesSectionFilters;
+
+    public function index(Request $request): View
     {
-        return view('subjects.index', $this->indexPayload());
+        return view('subjects.index', $this->indexPayload($request));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('subjects.index', array_merge($this->indexPayload(), [
+        return view('subjects.index', array_merge($this->indexPayload($request), [
             'modalMode' => 'create',
             'subjectFormModel' => new Subject,
         ]));
@@ -38,9 +41,9 @@ class SubjectController extends Controller
             ->with('status', 'Subject created successfully.');
     }
 
-    public function edit(Subject $subject): View
+    public function edit(Request $request, Subject $subject): View
     {
-        return view('subjects.index', array_merge($this->indexPayload(), [
+        return view('subjects.index', array_merge($this->indexPayload($request), [
             'modalMode' => 'edit',
             'subjectFormModel' => $subject->load(['section', 'teacher']),
         ]));
@@ -75,11 +78,36 @@ class SubjectController extends Controller
     /**
      * @return array<string, mixed>
      */
-    private function indexPayload(): array
+    private function indexPayload(Request $request): array
     {
-        return [
-            'subjects' => Subject::with(['section', 'teacher'])
-                ->orderBy('name')
+        $filters = $this->sectionFilterParams($request);
+
+        $subjectsQuery = Subject::with(['section', 'teacher'])->orderBy('name');
+
+        if ($filters['selectedYearLevel']) {
+            $subjectsQuery->whereHas('section', function ($q) use ($filters) {
+                $q->where('year_level', $filters['selectedYearLevel']);
+            });
+        }
+
+        if ($filters['selectedSection']) {
+            $subjectsQuery->whereHas('section', function ($q) use ($filters) {
+                $q->where('section', $filters['selectedSection']);
+            });
+        }
+
+        if ($filters['search']) {
+            $search = $filters['search'];
+            $subjectsQuery->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhereHas('teacher', function ($t) use ($search) {
+                        $t->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        return array_merge($filters, [
+            'subjects' => $subjectsQuery
                 ->paginate(15)
                 ->withQueryString(),
 
@@ -89,7 +117,7 @@ class SubjectController extends Controller
 
             'modalMode' => null,
             'subjectFormModel' => new Subject,
-        ];
+        ]);
     }
 
     /**

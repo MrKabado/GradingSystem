@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\AppliesSectionFilters;
 use App\Models\ActivityLog;
 use App\Models\Section;
 use App\Models\Student;
@@ -12,14 +13,16 @@ use Illuminate\View\View;
 
 class StudentController extends Controller
 {
-    public function index(): View
+    use AppliesSectionFilters;
+
+    public function index(Request $request): View
     {
-        return view('students.index', $this->indexPayload());
+        return view('students.index', $this->indexPayload($request));
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('students.index', array_merge($this->indexPayload(), [
+        return view('students.index', array_merge($this->indexPayload($request), [
             'modalMode' => 'create',
             'studentFormModel' => new Student,
         ]));
@@ -45,9 +48,9 @@ class StudentController extends Controller
         return view('students.show', compact('student'));
     }
 
-    public function edit(Student $student): View
+    public function edit(Request $request, Student $student): View
     {
-        return view('students.index', array_merge($this->indexPayload(), [
+        return view('students.index', array_merge($this->indexPayload($request), [
             'modalMode' => 'edit',
             'studentFormModel' => $student->load('section'),
         ]));
@@ -82,12 +85,38 @@ class StudentController extends Controller
     /**
      * @return array<string, mixed>
      */
-    private function indexPayload(): array
+    private function indexPayload(Request $request): array
     {
-        return [
-            'students' => Student::with('section')
-                ->orderBy('last_name')
-                ->orderBy('first_name')
+        $filters = $this->sectionFilterParams($request);
+
+        $studentsQuery = Student::with('section')
+            ->orderBy('last_name')
+            ->orderBy('first_name');
+
+        if ($filters['selectedYearLevel']) {
+            $studentsQuery->whereHas('section', function ($q) use ($filters) {
+                $q->where('year_level', $filters['selectedYearLevel']);
+            });
+        }
+
+        if ($filters['selectedSection']) {
+            $studentsQuery->whereHas('section', function ($q) use ($filters) {
+                $q->where('section', $filters['selectedSection']);
+            });
+        }
+
+        if ($filters['search']) {
+            $search = $filters['search'];
+            $studentsQuery->where(function ($q) use ($search) {
+                $q->where('first_name', 'like', "%{$search}%")
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('middle_name', 'like', "%{$search}%")
+                    ->orWhere('student_id', 'like', "%{$search}%");
+            });
+        }
+
+        return array_merge($filters, [
+            'students' => $studentsQuery
                 ->paginate(15)
                 ->withQueryString(),
             'sections' => Section::orderBy('year_level')
@@ -95,7 +124,7 @@ class StudentController extends Controller
                 ->get(),
             'modalMode' => null,
             'studentFormModel' => new Student,
-        ];
+        ]);
     }
 
     /**

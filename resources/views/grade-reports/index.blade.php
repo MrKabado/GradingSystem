@@ -4,7 +4,7 @@
 
   <div class="gs-main-page space-y-6">
     <div>
-      <h1 class="text-white text-2xl font-semibold">Grade Reports</h1>
+      <h1 class="gs-primary-text text-2xl font-semibold">Grade Reports</h1>
       <p class="gs-secondary-text text-sm">View and download student grade reports</p>
     </div>
 
@@ -79,7 +79,7 @@
               {{-- STATUS --}}
               <td class="px-4 py-3">
                 <span
-                  class="px-2.5 py-1 rounded-lg border text-[10px] font-bold uppercase tracking-wider
+                  class="px-2.5 py-1 rounded-lg border text-[10px] tracking-wider
                         {{ $item['status'] === 'Available' ? 'gs-success-bg gs-success-text ' : 'bg-[#3B2437] text-red-400 border-red-900/40' }}">
                   {{ $item['status'] }}
                 </span>
@@ -139,14 +139,14 @@
           {{-- Modal Header --}}
           <div class="flex items-start justify-between gap-4 border-b border-[#545878]/30 px-6 py-5">
             <div>
-              <h2 id="view-report-card-title" class="text-xl font-bold text-white flex items-center gap-2">
+              <h2 id="view-report-card-title" class="text-xl font-bold gs-primary-text flex items-center gap-2">
                 <i data-lucide="file-text" class="w-5 h-5 text-[#8B84FF]"></i>
                 Student Grade Report Card
               </h2>
               <p class="text-xs gs-secondary-text mt-1">Academic Year 2025 - 2026</p>
             </div>
             <a href="?{{ http_build_query(request()->except('view_student')) }}"
-              class="rounded-lg p-2 text-[#545878] hover:bg-[#22273D] hover:text-white transition cursor-pointer"
+              class="rounded-lg p-2 text-[#545878] hover:bg-[#22273D] hover:gs-primary-text transition cursor-pointer"
               aria-label="Close">
               <i data-lucide="x" class="w-5 h-5"></i>
             </a>
@@ -158,15 +158,15 @@
             <div class="grid grid-cols-3 gap-4 bg-[#0D0F1A] p-4 rounded-xl border border-[#545878]/25">
               <div class="space-y-1">
                 <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Student Name</p>
-                <p class="text-sm font-semibold text-white tracking-wide truncate">{{ $viewStudent->full_name }}</p>
+                <p class="text-sm font-semibold gs-primary-text tracking-wide truncate">{{ $viewStudent->full_name }}</p>
               </div>
               <div class="space-y-1">
                 <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Grade & Section</p>
-                <p class="text-sm font-semibold text-white truncate">Grade {{ $viewStudent->section?->year_level }} — {{ $viewStudent->section?->section }}</p>
+                <p class="text-sm font-semibold gs-primary-text truncate">Grade {{ $viewStudent->section?->year_level }} — {{ $viewStudent->section?->section }}</p>
               </div>
               <div class="space-y-1">
                 <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Adviser</p>
-                <p class="text-sm font-semibold text-white truncate">Mr. Erico Casil</p>
+                <p class="text-sm font-semibold gs-primary-text truncate">Mr. Erico Casil</p>
               </div>
             </div>
 
@@ -185,13 +185,13 @@
                 <tbody class="divide-y divide-[#2E3350]/40">
                   @forelse($reportCardRows as $r)
                     <tr class="hover:bg-[#22273D]/30 transition">
-                      <td class="px-4 py-3 text-white font-medium">{{ $r['subject'] }}</td>
+                      <td class="px-4 py-3 gs-primary-text font-medium">{{ $r['subject'] }}</td>
                       @foreach ($quarters as $q)
                         <td class="px-3 py-3 text-center text-gray-300 font-mono">
                           {{ $r['grades'][$q] !== null ? number_format($r['grades'][$q], 0) : '—' }}
                         </td>
                       @endforeach
-                      <td class="px-4 py-3 text-center text-white font-bold font-mono">
+                      <td class="px-4 py-3 text-center gs-primary-text font-bold font-mono">
                         {{ $r['average'] !== null ? number_format($r['average'], 0) : '—' }}
                       </td>
                     </tr>
@@ -235,7 +235,7 @@
             <div class="flex items-center justify-between bg-[#1E1F44]/40 border border-[#31326E]/60 rounded-xl px-5 py-4">
               <div class="flex items-center gap-3">
                 <div>
-                  <h4 class="text-white text-sm font-semibold">General Point Average (GPA)</h4>
+                  <h4 class="gs-primary-text text-sm font-semibold">General Point Average (GPA)</h4>
                   <p class="text-[10px] text-gray-400 mt-0.5">Calculated based on subjects average performance</p>
                 </div>
               </div>
@@ -271,7 +271,7 @@
               <form method="POST" action="{{ route('grade-reports.approve', $viewStudent->id) }}" class="m-0">
                 @csrf
                 <button type="submit"
-                  class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2.5 px-5 rounded-lg flex items-center gap-1.5 cursor-pointer transition">
+                  class="bg-indigo-600 hover:bg-indigo-700 gs-primary-text text-xs font-semibold py-2.5 px-5 rounded-lg flex items-center gap-1.5 cursor-pointer transition">
                   <i data-lucide="check-square" class="w-4 h-4"></i>
                   Approve Report Card
                 </button>

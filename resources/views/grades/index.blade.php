@@ -11,7 +11,7 @@
     {{-- Title & Dynamic S.Y. Badge --}}
     <div class="flex justify-between items-end">
       <div>
-        <h1 class="text-white text-3xl font-semibold tracking-tight">Grades</h1>
+        <h1 class="gs-primary-text text-3xl font-semibold tracking-tight">Grades</h1>
         <p class="gs-secondary-text text-sm mt-1">Manage and monitor all students grades</p>
       </div>
       
@@ -28,7 +28,7 @@
         {{-- Grade / Year Level Dropdown --}}
         <div class="relative">
           <select name="year_level" onchange="this.form.submit()" 
-            class="appearance-none bg-[#1C2035] border border-[#545878] text-white px-4 pr-10 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#6366F1] text-sm cursor-pointer min-w-[130px]">
+            class="appearance-none bg-[#1C2035] border border-[#545878] gs-primary-text px-4 pr-10 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#6366F1] text-sm cursor-pointer min-w-[130px]">
             <option value="">— Year —</option>
             @foreach($yearLevels as $yl)
               <option value="{{ $yl }}" @selected((string)$selectedYearLevel === (string)$yl)>Grade {{ $yl }}</option>
@@ -42,7 +42,7 @@
         {{-- Section Dropdown --}}
         <div class="relative">
           <select name="section" onchange="this.form.submit()" 
-            class="appearance-none bg-[#1C2035] border border-[#545878] text-white px-4 pr-10 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#6366F1] text-sm cursor-pointer min-w-[140px]">
+            class="appearance-none bg-[#1C2035] border border-[#545878] gs-primary-text px-4 pr-10 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#6366F1] text-sm cursor-pointer min-w-[140px]">
             <option value="">— Section —</option>
             @foreach($sectionNames as $sn)
               <option value="{{ $sn }}" @selected((string)$selectedSection === (string)$sn)>Section {{ $sn }}</option>
@@ -61,7 +61,7 @@
             name="search"
             value="{{ request('search') }}"
             placeholder="Search by name or ID..."
-            class="w-full bg-transparent text-sm text-white placeholder-gray-500 focus:outline-none">
+            class="w-full bg-transparent text-sm gs-primary-text placeholder-gray-500 focus:outline-none">
         </div>
       </div>
 
@@ -78,14 +78,14 @@
     {{-- Main Performance Dashboard --}}
     @if ($activeSection)
       <div class="space-y-6">
-        {{-- Aggregate Summary Metrics Grid --}}
+        {{-- CARDS FOR TOTAL STUDENT, PASSED, FAILED, CLASS AVERAGE --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="gs-card rounded-xl p-4 flex flex-col justify-between space-y-2">
             <div class="flex items-center justify-between text-gray-400">
               <span class="text-xs font-semibold uppercase tracking-wider">Total Students</span>
               <i data-lucide="users" class="w-4 h-4"></i>
             </div>
-            <p class="text-white text-3xl font-bold">{{ $stats['total'] }}</p>
+            <p class="gs-primary-text text-3xl font-semibold">{{ $stats['total'] }}</p>
           </div>
 
           <div class="gs-card rounded-xl p-4 flex flex-col justify-between space-y-2">
@@ -93,7 +93,7 @@
               <span class="text-xs font-semibold uppercase tracking-wider">Passed</span>
               <i data-lucide="badge-check" class="w-4 h-4"></i>
             </div>
-            <p class="text-[#22C55E] text-3xl font-bold">{{ $stats['passed'] }}</p>
+            <p class="text-[#22C55E] text-3xl font-semibold">{{ $stats['passed'] }}</p>
           </div>
 
           <div class="gs-card rounded-xl p-4 flex flex-col justify-between space-y-2">
@@ -101,7 +101,7 @@
               <span class="text-xs font-semibold uppercase tracking-wider">Failed</span>
               <i data-lucide="badge-alert" class="w-4 h-4"></i>
             </div>
-            <p class="text-[#EF4444] text-3xl font-bold">{{ $stats['failed'] }}</p>
+            <p class="text-[#EF4444] text-3xl font-semibold">{{ $stats['failed'] }}</p>
           </div>
 
           <div class="gs-card rounded-xl p-4 flex flex-col justify-between space-y-2">
@@ -109,7 +109,7 @@
               <span class="text-xs font-semibold uppercase tracking-wider">Class Average</span>
               <i data-lucide="award" class="w-4 h-4"></i>
             </div>
-            <p class="text-[#8B84FF] text-3xl font-bold">
+            <p class="text-[#8B84FF] text-3xl font-semibold">
               {{ $stats['average'] !== null ? $stats['average'] . '%' : '—' }}
             </p>
           </div>
@@ -146,7 +146,7 @@
                 @forelse ($gradeRows as $index => $row)
                   <tr class="hover:bg-[#22273D]/50 transition duration-150">
                     <td class="px-5 py-4 text-gray-400 font-mono">{{ sprintf('%02d', $index + 1) }}</td>
-                    <td class="px-5 py-4 text-white font-medium tracking-wide">{{ $row['name'] }}</td>
+                    <td class="px-5 py-4 gs-primary-text font-medium tracking-wide">{{ $row['name'] }}</td>
                     @foreach ($quarters as $q)
                       <td class="px-5 py-4 text-center text-gray-300 font-mono">
                         {{ $row['grades'][$q] !== null ? number_format($row['grades'][$q], 0) : '—' }}
@@ -157,11 +157,11 @@
                     </td>
                     <td class="px-5 py-4 text-center">
                       @if ($row['remarks'] === 'Passed')
-                        <span class="px-2.5 py-1 rounded text-xs gs-success-bg gs-success-text font-bold">
+                        <span class="px-2.5 py-1 rounded-md text-xs gs-success-bg gs-success-text">
                           Passed
                         </span>
                       @elseif ($row['remarks'] === 'Failed')
-                        <span class="px-2.5 py-1 rounded text-xs gs-failed-bg gs-failed-text font-bold">
+                        <span class="px-2.5 py-1 rounded-md text-xs gs-failed-bg gs-failed-text">
                           Failed
                         </span>
                       @else
@@ -172,14 +172,14 @@
                       <div class="flex items-center justify-center gap-2">
                         {{-- View Report card --}}
                         <a href="{{ route('grades.show', ['student' => $row['student_id'], 'year_level' => $selectedYearLevel, 'section' => $selectedSection]) }}"
-                          class="flex items-center gap-1 bg-[#22273D] text-gray-400 hover:text-white px-3 py-1.5 rounded border border-[#545878]/30 hover:border-gray-500 transition text-xs font-semibold">
+                          class="flex items-center gap-1 gs-secondary-text bg-[#22273D] hover:bg-[#2B304A] px-2 py-1 rounded-lg border gs-primary-border-color cursor-pointer">
                           <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                           View
                         </a>
 
                         {{-- Edit Report Card --}}
                         <a href="{{ route('grades.edit', ['student' => $row['student_id'], 'year_level' => $selectedYearLevel, 'section' => $selectedSection]) }}"
-                          class="flex items-center gap-1 bg-[#22273D] text-gray-400 hover:text-white px-3 py-1.5 rounded border border-[#545878]/30 hover:border-gray-500 transition text-xs font-semibold">
+                          class="flex items-center gap-1 gs-secondary-text bg-[#22273D] hover:bg-[#2B304A] px-2 py-1 rounded-lg border gs-primary-border-color cursor-pointer">
                           <i data-lucide="square-pen" class="w-3.5 h-3.5"></i>
                           Edit
                         </a>
@@ -189,7 +189,7 @@
                               onsubmit="return confirm('Clear grades of {{ $row['name'] }} across all subjects in this section?');">
                           @csrf
                           @method('DELETE')
-                          <button type="submit" class="flex items-center gap-1 bg-[#22273D] text-gray-400 hover:text-red-400 px-3 py-1.5 rounded border border-[#545878]/30 hover:border-red-500/55 transition text-xs font-semibold cursor-pointer">
+                          <button type="submit" class="flex items-center gap-1 gs-secondary-text bg-[#22273D] hover:bg-[#2B304A] px-2 py-1 rounded-lg border gs-primary-border-color cursor-pointer">
                             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                             Delete
                           </button>
@@ -232,14 +232,14 @@
           {{-- Modal Header --}}
           <div class="flex items-start justify-between gap-4 border-b border-[#545878]/30 px-6 py-5">
             <div>
-              <h2 id="view-report-card-title" class="text-xl font-bold text-white flex items-center gap-2">
+              <h2 id="view-report-card-title" class="text-xl font-bold gs-primary-text flex items-center gap-2">
                 <i data-lucide="file-text" class="w-5 h-5 text-[#8B84FF]"></i>
                 Student Grade Report
               </h2>
               <p class="text-xs gs-secondary-text mt-1">Academic Year 2025 - 2026</p>
             </div>
             <a href="{{ route('grades.index', ['year_level' => $selectedYearLevel, 'section' => $selectedSection]) }}"
-              class="rounded-lg p-2 text-[#545878] hover:bg-[#22273D] hover:text-white transition cursor-pointer"
+              class="rounded-lg p-2 text-[#545878] hover:bg-[#22273D] hover:gs-primary-text transition cursor-pointer"
               aria-label="Close">
               <i data-lucide="x" class="w-5 h-5"></i>
             </a>
@@ -251,15 +251,15 @@
             <div class="grid grid-cols-3 gap-4 bg-[#0D0F1A] p-4 rounded-xl border border-[#545878]/25">
               <div class="space-y-1">
                 <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Student Name</p>
-                <p class="text-sm font-semibold text-white tracking-wide truncate">{{ $gradeFormStudent->full_name }}</p>
+                <p class="text-sm font-semibold gs-primary-text tracking-wide truncate">{{ $gradeFormStudent->full_name }}</p>
               </div>
               <div class="space-y-1">
                 <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Grade & Section</p>
-                <p class="text-sm font-semibold text-white truncate">Grade {{ $gradeFormStudent->section?->year_level }} — {{ $gradeFormStudent->section?->section }}</p>
+                <p class="text-sm font-semibold gs-primary-text truncate">Grade {{ $gradeFormStudent->section?->year_level }} — {{ $gradeFormStudent->section?->section }}</p>
               </div>
               <div class="space-y-1">
                 <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Adviser</p>
-                <p class="text-sm font-semibold text-white truncate">Mr. Erico Casil</p>
+                <p class="text-sm font-semibold gs-primary-text truncate">Mr. Erico Casil</p>
               </div>
             </div>
 
@@ -278,13 +278,13 @@
                 <tbody class="divide-y divide-[#2E3350]/40">
                   @forelse($reportCardRows as $r)
                     <tr class="hover:bg-[#22273D]/30 transition">
-                      <td class="px-4 py-3 text-white font-medium">{{ $r['subject'] }}</td>
+                      <td class="px-4 py-3 gs-primary-text font-medium">{{ $r['subject'] }}</td>
                       @foreach ($quarters as $q)
                         <td class="px-3 py-3 text-center text-gray-300 font-mono">
                           {{ $r['grades'][$q] !== null ? number_format($r['grades'][$q], 0) : '—' }}
                         </td>
                       @endforeach
-                      <td class="px-4 py-3 text-center text-white font-bold font-mono">
+                      <td class="px-4 py-3 text-center gs-primary-text font-bold font-mono">
                         {{ $r['average'] !== null ? number_format($r['average'], 0) : '—' }}
                       </td>
                     </tr>
@@ -328,7 +328,7 @@
             <div class="flex items-center justify-between bg-[#1E1F44]/40 border border-[#31326E]/60 rounded-xl px-5 py-4">
               <div class="flex items-center gap-3">
                 <div>
-                  <h4 class="text-white text-sm font-semibold">General Point Average (GPA)</h4>
+                  <h4 class="gs-primary-text text-sm font-semibold">General Point Average (GPA)</h4>
                   <p class="text-[10px] text-gray-400 mt-0.5">Calculated based on subjects average performance</p>
                 </div>
               </div>
@@ -353,7 +353,7 @@
           {{-- Modal Footer --}}
           <div class="flex items-center justify-between border-t border-[#545878]/30 px-6 py-4 bg-[#0D0F1A]/50">
             <button onclick="alert('Report card successfully signed & approved.')"
-              class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2.5 px-5 rounded-lg flex items-center gap-1.5 cursor-pointer transition">
+              class="bg-indigo-600 hover:bg-indigo-700 gs-primary-text text-xs font-semibold py-2.5 px-5 rounded-lg flex items-center gap-1.5 cursor-pointer transition">
               <i data-lucide="check-square" class="w-4 h-4"></i>
               Approve Report Card
             </button>
@@ -376,7 +376,7 @@
           {{-- Header --}}
           <div class="flex items-start justify-between gap-4 border-b border-[#545878]/30 px-6 py-4">
             <div>
-              <h2 id="edit-grade-title" class="text-lg font-bold text-white flex items-center gap-2">
+              <h2 id="edit-grade-title" class="text-lg font-bold gs-primary-text flex items-center gap-2">
                 <i data-lucide="square-pen" class="w-5 h-5 text-indigo-400"></i>
                 Grade Editor
               </h2>

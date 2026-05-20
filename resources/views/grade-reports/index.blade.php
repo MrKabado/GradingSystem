@@ -136,7 +136,7 @@
       <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="view-report-card-title">
         <div class="gs-card w-full max-w-2xl rounded-2xl shadow-2xl border border-[#545878]/40 bg-[#13162A] max-h-[90vh] overflow-y-auto flex flex-col">
           
-          {{-- Modal Header --}}
+          {{-- Header --}}
           <div class="flex items-start justify-between gap-4 border-b border-[#545878]/30 px-6 py-5">
             <div>
               <h2 id="view-report-card-title" class="text-xl font-bold gs-primary-text flex items-center gap-2">
@@ -152,7 +152,7 @@
             </a>
           </div>
 
-          {{-- Modal Body --}}
+          {{-- Body --}}
           <div class="px-6 py-5 space-y-6 flex-1">
             {{-- Student Details Grid --}}
             <div class="grid grid-cols-3 gap-4 bg-[#0D0F1A] p-4 rounded-xl border border-[#545878]/25">
@@ -241,7 +241,7 @@
               </div>
 
               <div class="flex items-center gap-3.5">
-                <p class="text-[#8B84FF] text-2xl font-bold font-mono">
+                <p class="text-[#8B84FF] text-2xl font-semibold font-mono">
                   GPA: {{ $viewGpa !== null ? number_format($viewGpa, 0) : '—' }}
                 </p>
                 <div>

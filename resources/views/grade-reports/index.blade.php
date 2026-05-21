@@ -2,7 +2,7 @@
 
 @section('content')
 
-  <div class="gs-main-page space-y-6">
+  <div class="gs-main-page">
     <div>
       <h1 class="gs-primary-text text-2xl font-semibold">Grade Reports</h1>
       <p class="gs-secondary-text text-sm">View and download student grade reports</p>

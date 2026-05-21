@@ -1,7 +1,7 @@
 @extends('layouts.index')
 
 @section('content')
-  <div class="gs-main-page space-y-6">
+  <div class="gs-main-page">
     @if (session('status'))
       <div class="rounded-lg border border-[#31326E] bg-[#1E1F44] px-4 py-3 text-sm text-[#8B84FF]">
         {{ session('status') }}

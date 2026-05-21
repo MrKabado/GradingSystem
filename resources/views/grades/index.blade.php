@@ -259,7 +259,7 @@
               </div>
               <div class="space-y-1">
                 <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Adviser</p>
-                <p class="text-sm font-semibold gs-primary-text truncate">Mr. Erico Casil</p>
+                <p class="text-sm font-semibold gs-primary-text truncate">{{ $gradeFormStudent->section?->class_adviser ?? '—' }}</p>
               </div>
             </div>
 

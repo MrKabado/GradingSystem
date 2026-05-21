@@ -144,7 +144,7 @@
 
     <div class="header">
         <div class="school-name">Mister Kabado Academy</div>
-        <div class="school-subtitle">Poblacion Ward II, Minglanilla, Cebu, Philippines | Tel: (032) 123-4567</div>
+        <div class="school-subtitle">Marigondon, Lapu-Lapu City, Cebu, Philippines | Tel: (032) 123-4567</div>
         <div class="report-title">OFFICIAL STUDENT REPORT CARD</div>
         <div class="school-subtitle">Academic Year 2025 - 2026</div>
     </div>
@@ -160,7 +160,7 @@
             <td class="info-label">Grade & Sec:</td>
             <td class="info-value">{{ $student->section ? 'Grade ' . $student->section->year_level . ' - ' . $student->section->section : '—' }}</td>
             <td class="info-label" style="padding-left: 20px;">Adviser:</td>
-            <td class="info-value">Mr. Erico Casil</td>
+            <td class="info-value">{{ $student->section?->class_adviser ?? '—' }}</td>
         </tr>
     </table>
 
@@ -191,6 +191,7 @@
                 if ($subAvg !== null) {
                     $totalFinalGrades[] = $subAvg;
                 }
+
                 $reportCardRows[] = [
                     'subject' => $sub->name,
                     'grades' => $qGrades,
@@ -300,7 +301,7 @@
         <tr>
             <td>
                 <div class="sig-line"></div>
-                <div style="font-weight: bold;">MR. ERICO CASIL</div>
+                <div style="font-weight: bold;">{{ strtoupper($student->section?->class_adviser ?? '—') }}</div>
                 <div class="sig-label">Class Adviser</div>
             </td>
             <td>

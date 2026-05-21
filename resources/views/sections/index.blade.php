@@ -27,7 +27,7 @@
       :section-names="$sectionNames"
       :selected-year-level="$selectedYearLevel"
       :selected-section="$selectedSection"
-      search-placeholder="Search by grade or section..."
+      search-placeholder="Search by grade, section, or adviser..."
     />
 
     <div class="gs-card py-4 rounded-lg space-y-4">
@@ -49,6 +49,7 @@
               <th class="px-4 py-3">#</th>
               <th class="px-4 py-3">Grade level</th>
               <th class="px-4 py-3">Section</th>
+              <th class="px-4 py-3">Class adviser</th>
               <th class="px-4 py-3">Students</th>
               <th class="px-4 py-3 text-center">Actions</th>
             </tr>
@@ -66,6 +67,9 @@
                     class="border-[0.5px] border-[#31326E] bg-[#23264A] text-[#8B84FF] w-fit px-2 py-1 rounded-lg">
                     Section {{ $section->section }}
                   </span>
+                </td>
+                <td class="px-4 py-3 gs-secondary-text">
+                  {{ $section->class_adviser ?? '—' }}
                 </td>
                 <td class="px-4 py-3 gs-secondary-text">
                   {{ $section->students_count }}
@@ -92,7 +96,7 @@
               </tr>
             @empty
               <tr>
-                <td colspan="5" class="px-4 py-8 text-center gs-secondary-text">
+                <td colspan="6" class="px-4 py-8 text-center gs-secondary-text">
                   No sections yet. Use <span class="text-[#8B84FF]">Add Section</span> to create one.
                 </td>
               </tr>
@@ -158,6 +162,19 @@
                 placeholder="e.g. A"
                 class="w-full rounded-lg border border-[#545878] bg-[#0D0F1A] px-3 py-2 text-sm text-white placeholder-[#545878] focus:border-[#6366F1] focus:outline-none focus:ring-1 focus:ring-[#6366F1]" />
               @error('section')
+                <p class="mt-1 text-xs text-red-400">{{ $message }}</p>
+              @enderror
+            </div>
+
+            <div>
+              <label for="class_adviser" class="block text-xs font-medium text-gray-400 mb-1">
+                Class adviser <span class="text-red-400">*</span>
+              </label>
+              <input id="class_adviser" name="class_adviser" type="text" required
+                value="{{ old('class_adviser', $sectionFormModel->class_adviser) }}"
+                placeholder="e.g. Mr. Erico Casil"
+                class="w-full rounded-lg border border-[#545878] bg-[#0D0F1A] px-3 py-2 text-sm text-white placeholder-[#545878] focus:border-[#6366F1] focus:outline-none focus:ring-1 focus:ring-[#6366F1]" />
+              @error('class_adviser')
                 <p class="mt-1 text-xs text-red-400">{{ $message }}</p>
               @enderror
             </div>

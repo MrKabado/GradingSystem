@@ -10,7 +10,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class StudentReportController extends Controller
 {
     public function pdfDownload($id) {
-        $student = Student::with('grades')->findOrFail($id);
+        $student = Student::with(['grades', 'section'])->findOrFail($id);
 
         $pdf = Pdf::loadView('pdf.report-card', compact('student'))
                 ->setPaper('a4', 'potrait')

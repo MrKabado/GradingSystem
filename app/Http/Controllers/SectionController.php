@@ -96,7 +96,8 @@ class SectionController extends Controller
             $search = $filters['search'];
             $sectionsQuery->where(function ($q) use ($search) {
                 $q->where('year_level', 'like', "%{$search}%")
-                    ->orWhere('section', 'like', "%{$search}%");
+                    ->orWhere('section', 'like', "%{$search}%")
+                    ->orWhere('class_adviser', 'like', "%{$search}%");
             });
         }
 
@@ -111,13 +112,14 @@ class SectionController extends Controller
     }
 
     /**
-     * @return array{year_level: string, section: string}
+     * @return array{year_level: string, section: string, class_adviser: string}
      */
     private function validatedSectionData(Request $request): array
     {
         return $request->validate([
             'year_level' => ['required', 'string', 'max:255'],
             'section' => ['required', 'string', 'max:255'],
+            'class_adviser' => ['required', 'string', 'max:255'],
         ]);
     }
 }

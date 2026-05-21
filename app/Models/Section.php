@@ -13,6 +13,7 @@ class Section extends Model
     protected $fillable = [
         'year_level',
         'section',
+        'class_adviser',
     ];
 
     public function students(): HasMany

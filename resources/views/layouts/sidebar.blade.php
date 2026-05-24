@@ -22,8 +22,7 @@
 
           {{-- DASHBOARD --}}
           <li>
-            <a href="{{ route('dashboard') }}"
-              class="w-full py-2 px-3 text-lg mb-1 flex gap-2 items-center gs-sidebar-hover-active
+            <a href="{{ route('dashboard') }}" class="w-full py-2 px-3 text-lg mb-1 flex gap-2 items-center gs-sidebar-hover-active
               {{ request()->routeIs('dashboard') ? 'gs-sidebar-active' : 'gs-secondary-text' }}">
               <i data-lucide="box" class="w-8 h-6"></i>
               Overview
@@ -32,8 +31,7 @@
 
           {{-- STUDENTS --}}
           <li>
-            <a href="{{ route('students.index') }}"
-              class="w-full py-2 px-3 text-lg mb-1 flex gap-2 items-center gs-sidebar-hover-active
+            <a href="{{ route('students.index') }}" class="w-full py-2 px-3 text-lg mb-1 flex gap-2 items-center gs-sidebar-hover-active
               {{ request()->routeIs('students.*') ? 'gs-sidebar-active' : 'gs-secondary-text' }}">
               <i data-lucide="circle-user-round" class="w-8 h-6"></i>
               Students
@@ -42,8 +40,7 @@
 
           {{-- SECTIONS --}}
           <li>
-            <a href="{{ route('sections.index') }}"
-              class="w-full py-2 px-3 text-lg mb-1 flex gap-2 items-center gs-sidebar-hover-active
+            <a href="{{ route('sections.index') }}" class="w-full py-2 px-3 text-lg mb-1 flex gap-2 items-center gs-sidebar-hover-active
               {{ request()->routeIs('sections.*') ? 'gs-sidebar-active' : 'gs-secondary-text' }}">
               <i data-lucide="users-round" class="w-8 h-6"></i>
               Sections
@@ -52,8 +49,7 @@
 
           {{-- SUBJECTS --}}
           <li>
-            <a href="{{ route('subjects.index') }}"
-              class="w-full py-2 px-3 text-lg mb-1 flex gap-2 items-center gs-sidebar-hover-active
+            <a href="{{ route('subjects.index') }}" class="w-full py-2 px-3 text-lg mb-1 flex gap-2 items-center gs-sidebar-hover-active
               {{ request()->routeIs('subjects.*') ? 'gs-sidebar-active' : 'gs-secondary-text' }}">
               <i data-lucide="book-copy" class="w-8 h-6"></i>
               Subjects
@@ -62,8 +58,7 @@
 
           {{-- GRADES --}}
           <li>
-            <a href="{{ route('grades.index') }}"
-              class="w-full py-2 px-3 text-lg mb-1 flex gap-2 items-center gs-sidebar-hover-active
+            <a href="{{ route('grades.index') }}" class="w-full py-2 px-3 text-lg mb-1 flex gap-2 items-center gs-sidebar-hover-active
               {{ request()->routeIs('grades.*') ? 'gs-sidebar-active' : 'gs-secondary-text' }}">
               <i data-lucide="chart-no-axes-column" class="w-8 h-6"></i>
               Grades
@@ -80,8 +75,7 @@
         <ul>
 
           <li>
-            <a href="{{ route('grade-reports.index') }}"
-              class="w-full py-2 px-3 text-lg mb-1 flex gap-2 items-center gs-sidebar-hover-active
+            <a href="{{ route('grade-reports.index') }}" class="w-full py-2 px-3 text-lg mb-1 flex gap-2 items-center gs-sidebar-hover-active
               {{ request()->routeIs('grade-reports.*') ? 'gs-sidebar-active' : 'gs-secondary-text' }}">
               <i data-lucide="notepad-text" class="w-8 h-6"></i>
               Grade Reports
@@ -95,15 +89,25 @@
   </div>
 
   {{-- USER --}}
-  <div class="flex gap-4 items-center border-t border-[#545878] pt-4">
-    <div class="bg-[#6366F1] text-white p-2 rounded-full font-semibold">
-      <h1>AD</h1>
+
+  <div class="flex gap-4 items-center justify-between border-t border-[#545878] pt-4">
+    <div class="flex gap-4 items-center min-w-0">
+      <div class="bg-[#6366F1] text-white p-2 rounded-full font-semibold shrink-0">
+        <span class="text-xs">GS</span>
+      </div>
+
+      <div class="min-w-0">
+        <h1 class="text-white text-sm truncate">{{ $user?->name ?? 'Admin' }}</h1>
+        <p class="gs-secondary-text text-xs truncate">{{ $user?->email ?? 'Administrator' }}</p>
+      </div>
     </div>
 
-    <div>
-      <h1 class="text-white text-sm">Admin</h1>
-      <p class="gs-secondary-text text-xs">Administrator</p>
-    </div>
+    <form method="POST" action="{{ route('logout') }}" class="shrink-0">
+      @csrf
+      <button type="submit" title="Logout" aria-label="Logout"
+        class="p-1 rounded-lg text-red-700 hover:text-red-500 hover:bg-red-500/10 transition cursor-pointer">
+        <i data-lucide="log-out" class="w-5 h-5"></i>
+      </button>
+    </form>
   </div>
-
 </div>

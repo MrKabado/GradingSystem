@@ -370,7 +370,7 @@
 
     {{-- 2. DYNAMIC LIVE CALCULATING MULTI-SUBJECT GRADE EDITOR MODAL --}}
     @if ($modalMode === 'edit' && $gradeFormStudent && $reportCardRows !== [])
-      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="edit-grade-title">
+      <div class="fixed h-full inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="edit-grade-title">
         <div class="gs-card w-full max-w-3xl rounded-2xl shadow-2xl border border-[#545878]/40 bg-[#13162A] max-h-[90vh] overflow-y-auto flex flex-col">
           
           {{-- Header --}}

@@ -8,14 +8,14 @@
       </div>
     @endif
 
-    <div class="flex justify-between items-center">
-      <div>
-        <h1 class="text-white text-2xl font-semibold">Sections</h1>
-        <p class="gs-secondary-text text-sm">Manage grade levels and class sections</p>
+    <div class="gs-page-header">
+      <div class="min-w-0">
+        <h1 class="gs-page-title">Sections</h1>
+        <p class="gs-page-subtitle">Manage grade levels and class sections</p>
       </div>
 
       <a href="{{ route('sections.create') }}"
-        class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 rounded-lg cursor-pointer text-sm py-2 inline-flex items-center">
+        class="w-full sm:w-auto justify-center bg-indigo-500 hover:bg-indigo-600 text-white px-6 rounded-lg cursor-pointer text-sm py-2 inline-flex items-center shrink-0">
         Add Section
       </a>
     </div>
@@ -31,7 +31,7 @@
     />
 
     <div class="gs-card py-4 rounded-lg space-y-4">
-      <div class="flex justify-between items-center px-4">
+      <div class="gs-card-header">
         <div>
           <h1 class="text-xl font-semibold text-gray-300">Section List</h1>
           <p class="text-xs gs-secondary-text mt-1">All sections in the system</p>
@@ -42,8 +42,8 @@
         </div>
       </div>
 
-      <div class="overflow-x-auto border-[#545878]">
-        <table class="min-w-full text-sm text-left">
+      <div class="gs-table-wrap">
+        <table class="min-w-[720px] w-full text-sm text-left">
           <thead class="bg-[#1C2035] border-b border-t border-[#545878]">
             <tr class="gs-secondary-text text-xs uppercase tracking-wider">
               <th class="px-4 py-3">#</th>
@@ -118,10 +118,9 @@
         $formAction = $isEdit ? route('sections.update', $sectionFormModel) : route('sections.store');
       @endphp
 
-      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" role="dialog"
+      <div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60" role="dialog"
         aria-modal="true" aria-labelledby="section-modal-title">
-        <div
-          class="gs-card w-full max-w-lg rounded-xl shadow-xl border border-[#545878] bg-[#13162A] max-h-[90vh] overflow-y-auto">
+        <div class="gs-modal-panel rounded-t-xl sm:rounded-xl">
           <div class="flex items-start justify-between gap-4 border-b border-[#545878] px-5 py-4">
             <div>
               <h2 id="section-modal-title" class="text-lg font-semibold text-white">

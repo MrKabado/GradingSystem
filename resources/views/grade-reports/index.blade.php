@@ -3,9 +3,9 @@
 @section('content')
 
   <div class="gs-main-page">
-    <div>
-      <h1 class="gs-primary-text text-2xl font-semibold">Grade Reports</h1>
-      <p class="gs-secondary-text text-sm">View and download student grade reports</p>
+    <div class="min-w-0">
+      <h1 class="gs-page-title gs-primary-text">Grade Reports</h1>
+      <p class="gs-page-subtitle">View and download student grade reports</p>
     </div>
 
     @if (session('status'))
@@ -24,7 +24,7 @@
       search-placeholder="Search by student name or ID..."
     />
 
-    <div class="grid grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       @foreach ($cards as $card)
         <div class="gs-card rounded-lg px-4 py-3 flex flex-col justify-between">
           <h1 class="gs-secondary-text text-xs uppercase tracking-wider font-semibold">{{ $card['name'] }}</h1>
@@ -33,9 +33,9 @@
       @endforeach
     </div>
 
-    <div class="gs-card rounded-lg overflow-x-auto border-[#545878]">
-
-      <table class="min-w-full text-sm text-left">
+    <div class="gs-card rounded-lg border-[#545878]">
+      <div class="gs-table-wrap">
+      <table class="min-w-[800px] w-full text-sm text-left">
 
         {{-- HEADER --}}
         <thead class="bg-[#1C2035] border-b border-t border-[#545878]">
@@ -129,12 +129,13 @@
         </tbody>
 
       </table>
+      </div>
     </div>
 
     {{-- VIEW STUDENT GRADE REPORT CARD MODAL --}}
     @if ($viewStudent)
-      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="view-report-card-title">
-        <div class="gs-card w-full max-w-2xl rounded-2xl shadow-2xl border border-[#545878]/40 bg-[#13162A] max-h-[90vh] overflow-y-auto flex flex-col">
+      <div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="view-report-card-title">
+        <div class="gs-card w-full sm:max-w-2xl rounded-t-2xl sm:rounded-2xl shadow-2xl border border-[#545878]/40 bg-[#13162A] max-h-[92vh] sm:max-h-[90vh] overflow-y-auto flex flex-col">
           
           {{-- Header --}}
           <div class="flex items-start justify-between gap-4 border-b border-[#545878]/30 px-6 py-5">
@@ -155,7 +156,7 @@
           {{-- Body --}}
           <div class="px-6 py-5 space-y-6 flex-1">
             {{-- Student Details Grid --}}
-            <div class="grid grid-cols-3 gap-4 bg-[#0D0F1A] p-4 rounded-xl border border-[#545878]/25">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-[#0D0F1A] p-4 rounded-xl border border-[#545878]/25">
               <div class="space-y-1">
                 <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Student Name</p>
                 <p class="text-sm font-semibold gs-primary-text tracking-wide truncate">{{ $viewStudent->full_name }}</p>
@@ -171,8 +172,8 @@
             </div>
 
             {{-- Multi-Subject Performance Table --}}
-            <div class="border border-[#545878]/30 rounded-xl overflow-hidden bg-[#0D0F1A]">
-              <table class="min-w-full text-xs text-left">
+            <div class="border border-[#545878]/30 rounded-xl overflow-hidden bg-[#0D0F1A] overflow-x-auto">
+              <table class="min-w-[480px] w-full text-xs text-left">
                 <thead class="bg-[#1C2035] border-b border-[#545878]/30">
                   <tr class="text-gray-400 uppercase tracking-wider font-semibold">
                     <th class="px-4 py-3">Subject</th>
@@ -232,15 +233,13 @@
             </div>
 
             {{-- Summary GPA & Status Badge --}}
-            <div class="flex items-center justify-between bg-[#1E1F44]/40 border border-[#31326E]/60 rounded-xl px-5 py-4">
-              <div class="flex items-center gap-3">
-                <div>
-                  <h4 class="gs-primary-text text-sm font-semibold">General Point Average (GPA)</h4>
-                  <p class="text-[10px] text-gray-400 mt-0.5">Calculated based on subjects average performance</p>
-                </div>
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between bg-[#1E1F44]/40 border border-[#31326E]/60 rounded-xl px-4 sm:px-5 py-4">
+              <div class="min-w-0">
+                <h4 class="gs-primary-text text-sm font-semibold">General Point Average (GPA)</h4>
+                <p class="text-[10px] text-gray-400 mt-0.5">Calculated based on subjects average performance</p>
               </div>
 
-              <div class="flex items-center gap-3.5">
+              <div class="flex flex-wrap items-center gap-3.5 shrink-0">
                 <p class="text-[#8B84FF] text-2xl font-semibold font-mono">
                   GPA: {{ $viewGpa !== null ? number_format($viewGpa, 0) : '—' }}
                 </p>
@@ -258,33 +257,33 @@
           </div>
 
           {{-- Modal Footer --}}
-          <div class="flex items-center justify-between border-t border-[#545878]/30 px-6 py-4 bg-[#0D0F1A]/50">
+          <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 border-t border-[#545878]/30 px-4 sm:px-6 py-4 bg-[#0D0F1A]/50">
             @php
               $hasApprovedReport = \App\Models\GradeReport::where('student_id', $viewStudent->id)->exists();
             @endphp
             @if ($hasApprovedReport)
-              <span class="text-xs text-[#22C55E] bg-[#22C55E]/10 px-3 py-2 rounded-lg border border-[#22C55E]/20 flex items-center gap-1">
-                <i data-lucide="check-circle" class="w-4 h-4"></i>
+              <span class="w-full sm:w-auto text-xs text-[#22C55E] bg-[#22C55E]/10 px-3 py-2 rounded-lg border border-[#22C55E]/20 flex items-center justify-center sm:justify-start gap-1">
+                <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
                 Report Card Signed & Approved
               </span>
             @elseif ($viewGpa !== null)
-              <form method="POST" action="{{ route('grade-reports.approve', $viewStudent->id) }}" class="m-0">
+              <form method="POST" action="{{ route('grade-reports.approve', $viewStudent->id) }}" class="m-0 w-full sm:w-auto">
                 @csrf
                 <button type="submit"
-                  class="bg-indigo-600 hover:bg-indigo-700 gs-primary-text text-xs font-semibold py-2.5 px-5 rounded-lg flex items-center gap-1.5 cursor-pointer transition">
+                  class="w-full sm:w-auto justify-center bg-indigo-600 hover:bg-indigo-700 gs-primary-text text-xs font-semibold py-2.5 px-5 rounded-lg flex items-center gap-1.5 cursor-pointer transition">
                   <i data-lucide="check-square" class="w-4 h-4"></i>
                   Approve Report Card
                 </button>
               </form>
             @else
-              <span class="text-xs text-gray-400 bg-gray-400/5 px-3 py-2 rounded-lg border border-[#545878]/30 flex items-center gap-1">
-                <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+              <span class="w-full sm:w-auto text-xs text-gray-400 bg-gray-400/5 px-3 py-2 rounded-lg border border-[#545878]/30 flex items-center justify-center sm:justify-start gap-1">
+                <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0"></i>
                 Grades must be recorded before approval
               </span>
             @endif
 
             <a href="?{{ http_build_query(request()->except('view_student')) }}"
-              class="gs-secondary-btn text-xs py-2 px-5 inline-flex items-center justify-center cursor-pointer transition">
+              class="w-full sm:w-auto justify-center gs-secondary-btn text-xs py-2 px-5 inline-flex items-center cursor-pointer transition text-center">
               Close Preview
             </a>
           </div>

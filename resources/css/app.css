@@ -11,7 +11,31 @@
 }
 
 .gs-main-page {
-  @apply bg-[#0D0F1A] p-6 space-y-8
+  @apply bg-[#0D0F1A] p-4 sm:p-6 space-y-6 sm:space-y-8 min-w-0 w-full;
+}
+
+.gs-page-header {
+  @apply flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4;
+}
+
+.gs-page-title {
+  @apply text-white text-xl sm:text-2xl font-semibold tracking-tight;
+}
+
+.gs-page-subtitle {
+  @apply text-[#545878] text-sm mt-0.5;
+}
+
+.gs-table-wrap {
+  @apply overflow-x-auto border-[#545878] -mx-4 px-4 sm:mx-0 sm:px-0;
+}
+
+.gs-card-header {
+  @apply flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-4;
+}
+
+.gs-modal-panel {
+  @apply w-full max-w-lg rounded-xl shadow-xl border border-[#545878] bg-[#13162A] max-h-[90vh] overflow-y-auto mx-auto;
 }
 
 .gs-primary-bg {

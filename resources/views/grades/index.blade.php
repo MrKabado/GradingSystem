@@ -9,71 +9,28 @@
     @endif
 
     {{-- Title & Dynamic S.Y. Badge --}}
-    <div class="flex justify-between items-end">
-      <div>
-        <h1 class="gs-primary-text text-3xl font-semibold tracking-tight">Grades</h1>
-        <p class="gs-secondary-text text-sm mt-1">Manage and monitor all students grades</p>
+    <div class="gs-page-header sm:items-end">
+      <div class="min-w-0">
+        <h1 class="gs-page-title gs-primary-text">Grades</h1>
+        <p class="gs-page-subtitle">Manage and monitor all students grades</p>
       </div>
-      
+
       @if($activeSection)
-        <span class="text-xs text-[#8B84FF] font-semibold bg-[#1E1F44] border border-[#31326E] px-3.5 py-1.5 rounded-lg">
+        <span class="w-fit text-xs text-[#8B84FF] font-semibold bg-[#1E1F44] border border-[#31326E] px-3.5 py-1.5 rounded-lg shrink-0">
           S.Y. 2025 - 2026 — 4th Quarter
         </span>
       @endif
     </div>
 
-    {{-- Dropdowns & Filters Panel --}}
-    <form method="GET" action="{{ route('grades.index') }}" class="flex flex-wrap gap-4 items-center justify-between bg-[#13162A] p-4 rounded-xl border border-[#545878]/30">
-      <div class="flex flex-wrap items-center gap-3 flex-1">
-        {{-- Grade / Year Level Dropdown --}}
-        <div class="relative">
-          <select name="year_level" onchange="this.form.submit()" 
-            class="appearance-none bg-[#1C2035] border border-[#545878] gs-primary-text px-4 pr-10 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#6366F1] text-sm cursor-pointer min-w-[130px]">
-            <option value="">— Year —</option>
-            @foreach($yearLevels as $yl)
-              <option value="{{ $yl }}" @selected((string)$selectedYearLevel === (string)$yl)>Grade {{ $yl }}</option>
-            @endforeach
-          </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#545878]">
-            <i data-lucide="chevron-down" class="w-4 h-4"></i>
-          </div>
-        </div>
-
-        {{-- Section Dropdown --}}
-        <div class="relative">
-          <select name="section" onchange="this.form.submit()" 
-            class="appearance-none bg-[#1C2035] border border-[#545878] gs-primary-text px-4 pr-10 py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#6366F1] text-sm cursor-pointer min-w-[140px]">
-            <option value="">— Section —</option>
-            @foreach($sectionNames as $sn)
-              <option value="{{ $sn }}" @selected((string)$selectedSection === (string)$sn)>Section {{ $sn }}</option>
-            @endforeach
-          </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#545878]">
-            <i data-lucide="chevron-down" class="w-4 h-4"></i>
-          </div>
-        </div>
-
-        {{-- Search Input --}}
-        <div class="flex items-center gap-3 bg-[#1C2035] border border-[#545878] px-4 py-2 rounded-lg hover:border-[#6366F1] focus-within:ring-1 focus-within:ring-[#6366F1] focus-within:border-[#6366F1] transition-all duration-200 min-w-[280px]">
-          <i data-lucide="search" class="text-gray-400 w-4 h-4"></i>
-          <input
-            type="text"
-            name="search"
-            value="{{ request('search') }}"
-            placeholder="Search by name or ID..."
-            class="w-full bg-transparent text-sm gs-primary-text placeholder-gray-500 focus:outline-none">
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2">
-        <button type="submit" class="bg-indigo-500/10 border border-indigo-500/30 hover:bg-indigo-500/20 text-[#8B84FF] px-4 py-2 rounded-lg cursor-pointer text-sm font-semibold transition">
-          Filter
-        </button>
-        <a href="{{ route('grades.index') }}" class="bg-[#22273D] border border-[#545878]/30 hover:bg-[#2B304A] text-gray-300 px-4 py-2 rounded-lg text-sm transition">
-          Reset
-        </a>
-      </div>
-    </form>
+    <x-section-filters
+      :action="route('grades.index')"
+      :reset-url="route('grades.index')"
+      :year-levels="$yearLevels"
+      :section-names="$sectionNames"
+      :selected-year-level="$selectedYearLevel"
+      :selected-section="$selectedSection"
+      search-placeholder="Search by name or ID..."
+    />
 
     {{-- Main Performance Dashboard --}}
     @if ($activeSection)
@@ -117,18 +74,18 @@
 
         {{-- Students Performance List Table --}}
         <div class="gs-card rounded-xl py-4 space-y-4">
-          <div class="flex justify-between items-center px-5">
-            <div>
-              <h3 class="text-lg font-semibold text-gray-300">Student Performance Record</h3>
+          <div class="gs-card-header px-4 sm:px-5">
+            <div class="min-w-0">
+              <h3 class="text-base sm:text-lg font-semibold text-gray-300">Student Performance Record</h3>
               <p class="text-xs gs-secondary-text mt-1">Displays student quarterly averages across all offered subjects</p>
             </div>
-            <div class="text-[#8B84FF] bg-[#1E1F44] px-3.5 py-1.5 rounded-lg border border-[#31326E] text-xs font-semibold">
+            <div class="w-fit text-[#8B84FF] bg-[#1E1F44] px-3.5 py-1.5 rounded-lg border border-[#31326E] text-xs font-semibold shrink-0">
               Grade {{ $activeSection->year_level }} — {{ $activeSection->section }}
             </div>
           </div>
 
-          <div class="overflow-x-auto border-t border-[#545878]/30">
-            <table class="min-w-full text-sm text-left">
+          <div class="gs-table-wrap border-t border-[#545878]/30">
+            <table class="min-w-[720px] w-full text-sm text-left">
               <thead class="bg-[#1C2035] border-b border-[#545878]/30">
                 <tr class="text-gray-400 text-xs uppercase tracking-wider font-semibold">
                   <th class="px-5 py-4 w-16">#</th>
@@ -226,8 +183,8 @@
 
     {{-- 1. VIEW STUDENT GRADE REPORT CARD MODAL --}}
     @if ($modalMode === 'view' && $gradeFormStudent)
-      <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="view-report-card-title">
-        <div class="gs-card w-full max-w-2xl rounded-2xl shadow-2xl border border-[#545878]/40 bg-[#13162A] max-h-[90vh] overflow-y-auto flex flex-col">
+      <div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="view-report-card-title">
+        <div class="gs-card w-full sm:max-w-2xl rounded-t-2xl sm:rounded-2xl shadow-2xl border border-[#545878]/40 bg-[#13162A] max-h-[92vh] sm:max-h-[90vh] overflow-y-auto flex flex-col">
           
           {{-- Modal Header --}}
           <div class="flex items-start justify-between gap-4 border-b border-[#545878]/30 px-6 py-5">
@@ -248,7 +205,7 @@
           {{-- Modal Body --}}
           <div class="px-6 py-5 space-y-6 flex-1">
             {{-- Student Details Grid --}}
-            <div class="grid grid-cols-3 gap-4 bg-[#0D0F1A] p-4 rounded-xl border border-[#545878]/25">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-[#0D0F1A] p-4 rounded-xl border border-[#545878]/25">
               <div class="space-y-1">
                 <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Student Name</p>
                 <p class="text-sm font-semibold gs-primary-text tracking-wide truncate">{{ $gradeFormStudent->full_name }}</p>
@@ -264,8 +221,8 @@
             </div>
 
             {{-- Multi-Subject Performance Table --}}
-            <div class="border border-[#545878]/30 rounded-xl overflow-hidden bg-[#0D0F1A]">
-              <table class="min-w-full text-xs text-left">
+            <div class="border border-[#545878]/30 rounded-xl overflow-hidden bg-[#0D0F1A] overflow-x-auto">
+              <table class="min-w-[480px] w-full text-xs text-left">
                 <thead class="bg-[#1C2035] border-b border-[#545878]/30">
                   <tr class="text-gray-400 uppercase tracking-wider font-semibold">
                     <th class="px-4 py-3">Subject</th>
@@ -351,15 +308,15 @@
           </div>
 
           {{-- Modal Footer --}}
-          <div class="flex items-center justify-between border-t border-[#545878]/30 px-6 py-4 bg-[#0D0F1A]/50">
+          <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 border-t border-[#545878]/30 px-4 sm:px-6 py-4 bg-[#0D0F1A]/50">
             <button onclick="alert('Report card successfully signed & approved.')"
-              class="bg-indigo-600 hover:bg-indigo-700 gs-primary-text text-xs font-semibold py-2.5 px-5 rounded-lg flex items-center gap-1.5 cursor-pointer transition">
+              class="w-full sm:w-auto justify-center bg-indigo-600 hover:bg-indigo-700 gs-primary-text text-xs font-semibold py-2.5 px-5 rounded-lg flex items-center gap-1.5 cursor-pointer transition">
               <i data-lucide="check-square" class="w-4 h-4"></i>
               Approve Report Card
             </button>
 
             <a href="{{ route('grades.index', ['year_level' => $selectedYearLevel, 'section' => $selectedSection]) }}"
-              class="gs-secondary-btn text-xs py-2 px-5 inline-flex items-center justify-center cursor-pointer transition">
+              class="w-full sm:w-auto justify-center gs-secondary-btn text-xs py-2 px-5 inline-flex items-center cursor-pointer transition">
               Close Report
             </a>
           </div>
@@ -370,8 +327,8 @@
 
     {{-- 2. DYNAMIC LIVE CALCULATING MULTI-SUBJECT GRADE EDITOR MODAL --}}
     @if ($modalMode === 'edit' && $gradeFormStudent && $reportCardRows !== [])
-      <div class="fixed h-full inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="edit-grade-title">
-        <div class="gs-card w-full max-w-3xl rounded-2xl shadow-2xl border border-[#545878]/40 bg-[#13162A] max-h-[90vh] overflow-y-auto flex flex-col">
+      <div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="edit-grade-title">
+        <div class="gs-card w-full sm:max-w-3xl rounded-t-2xl sm:rounded-2xl shadow-2xl border border-[#545878]/40 bg-[#13162A] max-h-[92vh] sm:max-h-[90vh] overflow-y-auto flex flex-col">
           
           {{-- Header --}}
           <div class="flex items-start justify-between gap-4 border-b border-[#545878]/30 px-6 py-4">
@@ -398,7 +355,7 @@
             {{-- Form Content --}}
             <div class="px-6 py-5 space-y-5 flex-1">
               {{-- Context Header Card --}}
-              <div class="grid grid-cols-2 gap-6 bg-[#0D0F1A] p-4 rounded-xl border border-[#545878]/25">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 bg-[#0D0F1A] p-4 rounded-xl border border-[#545878]/25">
                 <div>
                   <p class="text-[9px] font-bold text-gray-500 uppercase tracking-wider">Student Name</p>
                   <p class="text-sm font-semibold text-white mt-0.5 truncate">{{ $gradeFormStudent->full_name }}</p>
@@ -410,8 +367,8 @@
               </div>
 
               {{-- Multi-Subject Editable Table --}}
-              <div class="border border-[#545878]/30 rounded-xl overflow-hidden bg-[#0D0F1A]">
-                <table class="min-w-full text-xs text-left">
+              <div class="border border-[#545878]/30 rounded-xl overflow-hidden bg-[#0D0F1A] overflow-x-auto">
+                <table class="min-w-[520px] w-full text-xs text-left">
                   <thead class="bg-[#1C2035] border-b border-[#545878]/30">
                     <tr class="text-gray-400 uppercase tracking-wider font-semibold">
                       <th class="px-4 py-3">Subject</th>
@@ -455,19 +412,19 @@
             </div>
 
             {{-- Footer / Live Calculator Actions --}}
-            <div class="flex items-center justify-between border-t border-[#545878]/30 px-6 py-4 bg-[#0D0F1A]/50">
-              <div class="flex items-center gap-3">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-[#545878]/30 px-4 sm:px-6 py-4 bg-[#0D0F1A]/50">
+              <div class="flex flex-wrap items-center gap-3">
                 <span id="bottom-remarks" class="px-3 py-1 rounded text-xs font-bold bg-[#22273D] text-gray-500 border border-[#545878]/30">—</span>
                 <span id="bottom-gpa" class="text-white text-md font-bold font-mono">GPA: —</span>
               </div>
 
-              <div class="flex items-center gap-2.5">
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
                 <a href="{{ route('grades.index', ['year_level' => $selectedYearLevel, 'section' => $selectedSection]) }}"
-                  class="gs-secondary-btn text-xs py-2.5 px-5 inline-flex items-center justify-center cursor-pointer transition">
+                  class="w-full sm:w-auto justify-center gs-secondary-btn text-xs py-2.5 px-5 inline-flex items-center cursor-pointer transition">
                   Cancel
                 </a>
                 <button type="submit"
-                  class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2.5 px-6 rounded-lg cursor-pointer transition shadow-lg">
+                  class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold py-2.5 px-6 rounded-lg cursor-pointer transition shadow-lg">
                   Save Grades
                 </button>
               </div>

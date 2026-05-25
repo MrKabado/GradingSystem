@@ -1,7 +1,7 @@
 @extends('layouts.index')
 
 @section('content')
-  <div class="gs-main-page max-w-2xl">
+  <div class="gs-main-page w-full max-w-2xl mx-auto">
     <div class="mb-6">
       <a href="{{ route('students.index') }}"
         class="inline-flex items-center gap-2 text-sm text-[#8B84FF] hover:text-white transition">
@@ -13,7 +13,7 @@
     <div class="gs-card rounded-xl p-6 space-y-6">
       <div class="flex flex-wrap items-start justify-between gap-4 border-b border-[#545878] pb-6">
         <div>
-          <h1 class="text-2xl font-semibold text-white">{{ $student->full_name }}</h1>
+          <h1 class="text-xl sm:text-2xl font-semibold text-white break-words">{{ $student->full_name }}</h1>
           <p class="mt-1 text-sm gs-secondary-text">Student ID: <span class="text-gray-300">{{ $student->student_id }}</span></p>
         </div>
         <div class="flex flex-wrap gap-2">

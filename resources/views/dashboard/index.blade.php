@@ -57,7 +57,7 @@
       <div class="gs-card rounded-lg p-4 mt-4 flex flex-col gap-2 gs-secondary-text text-sm">
         @forelse($recentActivities as $activity)
           <div class="flex flex-col gap-1 sm:flex-row sm:justify-between sm:items-center border-b-[0.5px] border-[#545878] pb-2 last:border-b-0 last:pb-0">
-            <h1 class="break-words">{{ $activity->description }}</h1>
+            <h1 class="wrap-break-word">{{ $activity->description }}</h1>
             <span class="text-xs opacity-60 shrink-0">{{ $activity->created_at->diffForHumans() }}</span>
           </div>
         @empty

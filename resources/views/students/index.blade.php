@@ -43,7 +43,7 @@
       </div>
 
       <div class="gs-table-wrap">
-        <table class="min-w-[640px] w-full text-sm text-left">
+        <table class="min-w-160 w-full text-sm text-left">
           <thead class="bg-[#1C2035] border-b border-t border-[#545878]">
             <tr class="gs-secondary-text text-xs uppercase tracking-wider">
               <th class="px-4 py-3">#</th>
@@ -202,7 +202,7 @@
             <div>
               <label for="section_id" class="block text-xs font-medium text-gray-400 mb-1">Section (optional)</label>
               <select id="section_id" name="section_id"
-                class="w-full rounded-lg border border-[#545878] bg-[#0D0F1A] px-3 py-2 text-sm text-white focus:border-[#6366F1] focus:outline-none focus:ring-1 focus:ring-[#6366F1]">
+                class="w-full rounded-lg border border-[#545878] bg-[#e82424] px-3 py-2 text-sm text-white focus:border-[#6366F1] focus:outline-none focus:ring-1 focus:ring-[#f8f8f8]">
                 <option value="">— None —</option>
                 @foreach ($sections as $section)
                   <option value="{{ $section->id }}"

@@ -20,7 +20,7 @@
         </div>
 
         <div class="w-fit flex flex-col gap-1">
-          <h1 class="text-gray-300 text-2xl sm:text-3xl font-semibold">{{ $totalStudents }}</h1>
+          <h1 class="text-green-600 text-2xl sm:text-3xl font-semibold">{{ $totalStudents }}</h1>
           <p class="gs-secondary-text">Total Students</p>
           <p class="gs-success-bg gs-success-text text-xs px-1 rounded-md">+{{ $newStudentsThisMonth }} this month</p>
         </div>
